@@ -19,8 +19,9 @@
      var node = this;
      RED.nodes.createNode(this, config);
 
-     this.host = config.host;
-     this.port = config.port;
+     this.url = config.url;
+     this.token = config.token;
+     //this.contentType = config.contentType;
 
      var credentials = this.credentials;
 

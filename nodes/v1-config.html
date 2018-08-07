@@ -12,6 +12,21 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
+
+https://localhost:9443/ibmmq/rest/v1/messaging/qmgr/QM1/queue/MSGQ/message
+hostname
+Port
+ibmmq/rest/v1
+messaging
+QM1 = Queue Manager
+queue
+MSGQ = Queue
+
+-X POST -u app:h311
+-H "ibm-mq-rest-csrf-token: blank"
+-H "Content-Type: text/plain;charset=utf-8"
+-d "Hello World"
+
 -->
 
 <script type="text/x-red" data-template-name="mqi-config">
@@ -30,14 +45,32 @@
     </div>
 
     <div class="form-row">
-        <label for="node-config-input-hostname"><i class="fa fa-bookmark"></i> Host</label>
-        <input class="input-append-left" type="text" id="node-config-input-host">
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-port"><i class="fa fa-lock"></i> Port</label>
-        <input type="text" id="node-config-input-port">
+        <label for="node-config-input-url"><i class="fa fa-bookmark"></i> URL</label>
+        <input class="input-append-left" type="text" id="node-config-input-url"
+               placeholder="https://<hostname>:<port>/ibmmq/rest/v1/messaging/qmgr/<queue manager>/queue/<queue>/message">
     </div>
 
+    <div class="form-row">
+        <label for="node-config-input-token"><i class="fa fa-bookmark"></i> MQ REST CSRF Token</label>
+        <input class="input-append-left" type="text" id="node-config-input-token"
+               placeholder="blank">
+    </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="mqi-config">
+  <p>This is the configuration node for the MQI REST Nodes
+  </p>
+  <p>Use this node to specify the userid / password credentials to use when
+  reading from and writing to MQ Queues.</p>
+  <p>Specify the REST endpoint and method in the url field. This will be
+  <code>'https://&lt;hostname/>:&lt;port&gt;/ibmmq/rest/v1/messaging/qmgr/&lt;queue manager&gt;/queue/&lt;queue&gt;/message'</code> then this will
+  </p>
+  <p>eg. for a localised docker image running MQ on port 9443
+  with a queue manager of <code>QM1</code>i
+  and a queue of <code>DEV.QUEUE.1</code> this will be:</p>
+  <code>'https://localhost:9443/ibmmq/rest/v1/messaging/qmgr/QM1/queue/DEV.QUEUE.1/message'</code>
+  <p>If you are not passing in a CSRF token then specify blank.</p>
 </script>
 
 <script type="text/javascript">
@@ -45,8 +78,9 @@
         category: "config",
         color: "rgb(160, 50, 50)",
         defaults: {
-            host: {value:"", required:true},
-            port: {value:"", required:true},
+            url: {value:"", required:true},
+            token: {value:""},
+            //contentType: {value:""},
             name: {value:""}
         },
         credentials: {
