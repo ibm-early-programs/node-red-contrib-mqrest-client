@@ -14,7 +14,7 @@
   limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="mqi">
+<script type="text/x-red" data-template-name="mqi-out">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
@@ -28,7 +28,7 @@
 
 </script>
 
-<script type="text/x-red" data-help-name="mqi">
+<script type="text/x-red" data-help-name="mqi-out">
   <p>This node ...
   </p>
 
@@ -39,15 +39,15 @@
     fill: white;
   }
 
-  #palette_node_mqi>div.palette_label {
+  #palette_node_mqi-out>div.palette_label {
     color: white;
   }
 </style>
 
 <script type="text/javascript">
   (function() {
-    RED.nodes.registerType('mqi', {
-      category: 'storage',
+    RED.nodes.registerType('mqi-out', {
+      category: 'output',
       defaults: {
         name: { value: '' },
         connection: { value:"", type:"mqi-config" }
@@ -56,7 +56,7 @@
       },
       color: 'rgb(50,75,75)',
       inputs: 1,
-      outputs: 1,
+      outputs: 0,
       paletteLabel: 'MQI',
       icon: 'feed.png',
       label: function() {
