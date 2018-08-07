@@ -17,8 +17,23 @@
 module.exports = function(RED) {
   //var settings = require('./settings');
 
-  function start() {
-    return Promise.reject('No Functionality in this node yet');
+  function verifyPayload(msg, config) {
+    let error = null;
+    let type = typeof msg.payload
+    if (!config.contentType || config.contentType.includes('text/plain')) {
+      if ('string' !== type) {
+        error = 'Expecting a string in msg.payload';
+      }
+    } else if (config.contentType.includes('application/json')) {
+      if ('object' !== type) {
+        error = 'Expecting a json object in msg.payload';
+      }  
+    }
+    if (error) {
+      return Promise.reject(error);
+    } else {
+      return Promise.resolve();
+    }
   }
 
   function inProgress(msg) {
@@ -65,14 +80,14 @@ module.exports = function(RED) {
 
       var connection = null;
 
-      start()
+      verifyPayload(msg, config)
         .then(() => {
           return inProgress(msg);
         })
         .then(function() {
           node.status({});
           node.send(msg);
-        })        
+        })
         .catch(function(err) {
           reportError(node,msg,err);
           node.send(msg);
