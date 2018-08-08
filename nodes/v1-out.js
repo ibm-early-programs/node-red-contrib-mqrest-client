@@ -56,8 +56,8 @@ module.exports = function(RED) {
           'Content-Type': config.contentType
         },
         rejectUnauthorized: false,
-        requestCert: true,
-        agent: false,
+        //requestCert: true,
+        //agent: false,
         body: data
       }, (error, response, body) => {
         if (!error && (200 === response.statusCode
