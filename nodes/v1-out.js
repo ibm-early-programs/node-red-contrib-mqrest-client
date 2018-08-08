@@ -15,10 +15,11 @@
  **/
 
 module.exports = function(RED) {
-  //var settings = require('./settings');
+  const request = require('request');
 
   function verifyPayload(msg, config) {
     let error = null;
+    let stringPayload = msg.payload;
     let type = typeof msg.payload
     if (!config.contentType || config.contentType.includes('text/plain')) {
       if ('string' !== type) {
@@ -27,14 +28,58 @@ module.exports = function(RED) {
     } else if (config.contentType.includes('application/json')) {
       if ('object' !== type) {
         error = 'Expecting a json object in msg.payload';
-      }  
+      } else {
+        stringPayload = JSON.stringify(msg.payload);
+      }
     }
     if (error) {
       return Promise.reject(error);
     } else {
-      return Promise.resolve();
+      return Promise.resolve(stringPayload);
     }
   }
+
+  function postToQueue(msg, config, connection, data) {
+    return new Promise(function resolver(resolve, reject) {
+      console.log('Configuration looks like ', config);
+      console.log('Connection information looks like ', connection);
+
+      request({
+        uri: connection.url,
+        method: 'POST',
+        'auth': {
+          'user': connection.username,
+          'pass': connection.password,
+        },
+        headers: {
+          'ibm-mq-rest-csrf-token': connection.token,
+          'Content-Type': config.contentType
+        },
+        rejectUnauthorized: false,
+        requestCert: true,
+        agent: false,
+        body: data
+      }, (error, response, body) => {
+        if (!error && (200 === response.statusCode
+                         || 201 === response.statusCode)) {
+          //var b = JSON.parse(body);
+          //resolve(b);
+          //console.log('body looks like ', body);
+          //console.log('response looks like ', response);
+          resolve()
+        } else if (error) {
+          console.log(response);
+          reject(error);
+        } else {
+          reject('Error Invoking API ' + response.statusCode);
+        }
+      });
+
+
+      //reject('Request function still being built');
+    });
+  }
+
 
   function inProgress(msg) {
     // Dummy Function to use when building the structure
@@ -72,20 +117,17 @@ module.exports = function(RED) {
     node.connectionNode = RED.nodes.getNode(config.connection);
 
     this.on('input', function(msg) {
-      var options = {};
-      var query = '';
-      var parameters = [];
       //var message = '';
       node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
       var connection = null;
 
       verifyPayload(msg, config)
-        .then(() => {
-          return inProgress(msg);
+        .then((data) => {
+          return postToQueue(msg, config, node.connectionNode, data);
         })
         .then(function() {
-          node.status({});
+          node.status({ fill: 'blue', shape: 'dot', text: 'payload posted onto queue' });
           node.send(msg);
         })
         .catch(function(err) {
