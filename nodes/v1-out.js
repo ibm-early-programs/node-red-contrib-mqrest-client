@@ -16,6 +16,7 @@
 
 module.exports = function(RED) {
   const request = require('request');
+  const Utils = require('./mqi-utils');
 
   function verifyPayload(msg, config) {
     let error = null;
@@ -87,31 +88,11 @@ module.exports = function(RED) {
     return Promise.resolve();
   }
 
-  function reportError(node, msg, err) {
-    var messageTxt = err;
-    //if (err.code && 'ENOENT' === err.code) {
-    //  messageTxt = 'Invalid File Path';
-    //}
-    if (err.error) {
-      messageTxt = err.error;
-    } else if (err.description) {
-      messageTxt = err.description;
-    } else if (err.message) {
-      messageTxt = err.message;
-    }
-    node.status({
-      fill: 'red',
-      shape: 'dot',
-      text: messageTxt
-    });
-
-    msg.result = {};
-    msg.result['error'] = err;
-    node.error(messageTxt, msg);
-  }
 
   function Node(config) {
     var node = this;
+    const utils = new Utils(node);
+
     RED.nodes.createNode(this, config);
 
     node.connectionNode = RED.nodes.getNode(config.connection);
@@ -131,7 +112,7 @@ module.exports = function(RED) {
           node.send(msg);
         })
         .catch(function(err) {
-          reportError(node,msg,err);
+          utils.reportError(msg,err);
           node.send(msg);
         });
     });
