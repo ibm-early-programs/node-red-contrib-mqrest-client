@@ -18,16 +18,22 @@ module.exports = function(RED) {
   const request = require('request');
   const Utils = require('./mqrest-utils');
 
-  function start() {
-    return Promise.reject('No Functionality in this node yet - 001');
-  }
+  function processResponseData(msg, data) {
+    console.log('Processing Response ', data);
+    if ('string' !== typeof data) {
+      return Promise.reject('Unexpected type data ' + typeof data);
+    } else {
+      let b = data;
+      try {
+        b = JSON.parse(data);
+      }
+      catch(e) {
+      }
+      msg.payload = b;
+    }
 
-  function inProgress(msg) {
-    // Dummy Function to use when building the structure
-    msg.payload = 'The node is still being coded - 001';
     return Promise.resolve();
   }
-
 
   function readFromQueue(msg, config, connection) {
     return new Promise(function resolver(resolve, reject) {
@@ -54,9 +60,9 @@ module.exports = function(RED) {
                          || 201 === response.statusCode)) {
           //var b = JSON.parse(body);
           //resolve(b);
-          console.log('body looks like ', body);
-          console.log('response looks like ', response);
-          resolve()
+          //console.log('body looks like ', body);
+          //console.log('response looks like ', response);
+          resolve(body)
         } else if (error) {
           console.log(response);
           reject(error);
@@ -85,8 +91,13 @@ module.exports = function(RED) {
       var connection = null;
 
       readFromQueue(msg, config, node.connectionNode)
-        .then(() => {
-          return inProgress(msg);
+        .then((data) => {
+          node.status({ fill: 'green', shape: 'dot', text: 'message received' });
+          return processResponseData(msg, data);
+        })
+        .then(function() {
+          node.status({});
+          node.send(msg);
         })
         .catch(function(err) {
           utils.reportError(msg, err);
