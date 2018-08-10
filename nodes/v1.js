@@ -50,10 +50,7 @@ module.exports = function(RED) {
           'ibm-mq-rest-csrf-token': connection.token,
           'Content-Type': config.contentType
         },
-        rejectUnauthorized: false //,
-        //requestCert: true,
-        //agent: false,
-        //body: data
+        rejectUnauthorized: false 
       }, (error, response, body) => {
         if (error) {
           console.log(response);
