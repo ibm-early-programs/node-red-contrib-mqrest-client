@@ -12,21 +12,6 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-
-https://localhost:9443/ibmmq/rest/v1/messaging/qmgr/QM1/queue/MSGQ/message
-hostname
-Port
-ibmmq/rest/v1
-messaging
-QM1 = Queue Manager
-queue
-MSGQ = Queue
-
--X POST -u app:h311
--H "ibm-mq-rest-csrf-token: blank"
--H "Content-Type: text/plain;charset=utf-8"
--d "Hello World"
-
 -->
 
 <script type="text/x-red" data-template-name="mqrest-config">
@@ -80,7 +65,6 @@ MSGQ = Queue
         defaults: {
             url: {value:"", required:true},
             token: {value:""},
-            //contentType: {value:""},
             name: {value:""}
         },
         credentials: {

@@ -29,8 +29,11 @@
 </script>
 
 <script type="text/x-red" data-help-name="mqrest">
-  <p>This node ...
-  </p>
+<p>This node makes use of the MQ REST API to read with delete messages from a MQ Queue. Use the
+configuration to specify the full API URL.</p>
+
+<p>The message if found is placed on <code>msg.payload</code>. If the message is a JSON object, then
+it is first converted into a JSON object before placing on <code>msg.payload</code>.</p>
 
 </script>
 

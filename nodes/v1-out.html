@@ -33,14 +33,15 @@
       <option value="application/json">application/json</option>
     </select>
   </div>
-
-
 </script>
 
 <script type="text/x-red" data-help-name="mqrest-out">
-  <p>This node ...
-  </p>
+  <p>This node makes use of the MQ REST API to write messages to a MQ Queue. Use the
+  configuration to specify the full API URL.</p>
 
+  <p>The message to post onto the queue is provided as input in <code>msg.payload</code>.</p>
+  <p>Specify the expected content type in the configuration. The node will check that
+  the contents of <code>msg.payload</code> match the specified type.</p>
 </script>
 
 <style type="text/css">
