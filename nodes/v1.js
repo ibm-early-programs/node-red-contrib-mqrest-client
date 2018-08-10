@@ -19,7 +19,6 @@ module.exports = function(RED) {
   const Utils = require('./mqrest-utils');
 
   function processResponseData(msg, data) {
-    console.log('Processing Response ', data);
     if ('string' !== typeof data) {
       return Promise.reject('Unexpected type data ' + typeof data);
     } else {
@@ -56,22 +55,25 @@ module.exports = function(RED) {
         //agent: false,
         //body: data
       }, (error, response, body) => {
-        if (!error && (200 === response.statusCode
-                         || 201 === response.statusCode)) {
-          //var b = JSON.parse(body);
-          //resolve(b);
-          //console.log('body looks like ', body);
-          //console.log('response looks like ', response);
-          resolve(body)
-        } else if (error) {
+        if (error) {
           console.log(response);
           reject(error);
         } else {
-          reject('Error Invoking API ' + response.statusCode);
+          switch (response.statusCode) {
+            case 200:
+            case 201:
+              resolve(body);
+              break;
+            case 204:
+              reject('Queue is empty');
+              break;
+            default:
+              reject('Error Invoking API ' + response.statusCode);
+              break;
+          }
         }
       });
 
-      //reject('Request function still being built');
     });
   }
 

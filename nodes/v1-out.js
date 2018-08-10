@@ -42,8 +42,8 @@ module.exports = function(RED) {
 
   function postToQueue(msg, config, connection, data) {
     return new Promise(function resolver(resolve, reject) {
-      console.log('Configuration looks like ', config);
-      console.log('Connection information looks like ', connection);
+      //console.log('Configuration looks like ', config);
+      //console.log('Connection information looks like ', connection);
 
       request({
         uri: connection.url,
@@ -61,31 +61,24 @@ module.exports = function(RED) {
         //agent: false,
         body: data
       }, (error, response, body) => {
-        if (!error && (200 === response.statusCode
-                         || 201 === response.statusCode)) {
-          //var b = JSON.parse(body);
-          //resolve(b);
-          //console.log('body looks like ', body);
-          //console.log('response looks like ', response);
-          resolve()
-        } else if (error) {
+
+        if (error) {
           console.log(response);
           reject(error);
         } else {
-          reject('Error Invoking API ' + response.statusCode);
+          switch (response.statusCode) {
+            case 200:
+            case 201:
+              resolve();
+              break;
+            default:
+              reject('Error Invoking API ' + response.statusCode);
+              break;
+          }
         }
       });
 
-
-      //reject('Request function still being built');
     });
-  }
-
-
-  function inProgress(msg) {
-    // Dummy Function to use when building the structure
-    msg.payload = 'The node is still being coded';
-    return Promise.resolve();
   }
 
 
