@@ -47,10 +47,9 @@ module.exports = function(RED) {
           'pass': connection.password,
         },
         headers: {
-          'ibm-mq-rest-csrf-token': connection.token,
-          'Content-Type': config.contentType
+          'ibm-mq-rest-csrf-token': connection.token
         },
-        rejectUnauthorized: false 
+        rejectUnauthorized: false
       }, (error, response, body) => {
         if (error) {
           console.log(response);
