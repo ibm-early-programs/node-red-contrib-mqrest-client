@@ -16,7 +16,7 @@
 
 module.exports = function(RED) {
   const request = require('request');
-  const Utils = require('./mqi-utils');
+  const Utils = require('./mqrest-utils');
 
   function verifyPayload(msg, config) {
     let error = null;
@@ -118,7 +118,7 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('mqi-out', Node, {
+  RED.nodes.registerType('mqrest-out', Node, {
     credentials: {
     }
   });

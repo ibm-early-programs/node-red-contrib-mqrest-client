@@ -29,7 +29,7 @@ MSGQ = Queue
 
 -->
 
-<script type="text/x-red" data-template-name="mqi-config">
+<script type="text/x-red" data-template-name="mqrest-config">
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-config-input-name" placeholder="Name">
@@ -58,8 +58,8 @@ MSGQ = Queue
 
 </script>
 
-<script type="text/x-red" data-help-name="mqi-config">
-  <p>This is the configuration node for the MQI REST Nodes
+<script type="text/x-red" data-help-name="mqrest-config">
+  <p>This is the configuration node for the MQ REST Nodes
   </p>
   <p>Use this node to specify the userid / password credentials to use when
   reading from and writing to MQ Queues.</p>
@@ -74,7 +74,7 @@ MSGQ = Queue
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType("mqi-config",{
+    RED.nodes.registerType("mqrest-config",{
         category: "config",
         color: "rgb(160, 50, 50)",
         defaults: {

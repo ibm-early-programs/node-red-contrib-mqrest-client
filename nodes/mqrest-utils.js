@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-class MQIUtils {
+class MQRESTUtils {
 
   constructor(node) {
     this._node = node;
@@ -45,4 +45,4 @@ class MQIUtils {
 
 }
 
-module.exports = MQIUtils;
+module.exports = MQRESTUtils;

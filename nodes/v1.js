@@ -16,7 +16,7 @@
 
 module.exports = function(RED) {
   const request = require('request');
-  const Utils = require('./mqi-utils');
+  const Utils = require('./mqrest-utils');
 
   function start() {
     return Promise.reject('No Functionality in this node yet - 001');
@@ -56,7 +56,7 @@ module.exports = function(RED) {
     });
   }
 
-  RED.nodes.registerType('mqi', Node, {
+  RED.nodes.registerType('mqrest', Node, {
     credentials: {
     }
   });

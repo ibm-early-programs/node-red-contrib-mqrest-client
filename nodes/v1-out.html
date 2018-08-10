@@ -14,7 +14,7 @@
   limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="mqi-out">
+<script type="text/x-red" data-template-name="mqrest-out">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
@@ -37,7 +37,7 @@
 
 </script>
 
-<script type="text/x-red" data-help-name="mqi-out">
+<script type="text/x-red" data-help-name="mqrest-out">
   <p>This node ...
   </p>
 
@@ -48,29 +48,29 @@
     fill: white;
   }
 
-  #palette_node_mqi-out>div.palette_label {
+  #palette_node_mqrest-out>div.palette_label {
     color: white;
   }
 </style>
 
 <script type="text/javascript">
   (function() {
-    RED.nodes.registerType('mqi-out', {
+    RED.nodes.registerType('mqrest-out', {
       category: 'output',
       defaults: {
         name: { value: '' },
         contentType: { value: '' },
-        connection: { value:"", type:"mqi-config" }
+        connection: { value:"", type:"mqrest-config" }
       },
       credentials: {
       },
       color: 'rgb(50,75,75)',
       inputs: 1,
       outputs: 0,
-      paletteLabel: 'MQI',
+      paletteLabel: 'MQ REST',
       icon: 'feed.png',
       label: function() {
-        return this.name || 'MQI';
+        return this.name || 'MQ REST';
       },
       labelStyle: function() {
         return this.name ? 'node_label_italic node_label_white' : 'node_label_white';

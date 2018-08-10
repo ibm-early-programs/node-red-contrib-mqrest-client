@@ -33,7 +33,7 @@
      }
    }
 
-   RED.nodes.registerType('mqi-config', Node, {
+   RED.nodes.registerType('mqrest-config', Node, {
      credentials: {
        password: {type:"password"},
        username: {type:"text"}

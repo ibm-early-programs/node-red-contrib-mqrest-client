@@ -10,7 +10,7 @@
 ## Issues
 
 If you encounter an issue with using the labs here, you are welcome to submit
-a [bug report](https://github.com/ibm-early-programs/node-red-contrib-mqi-client/issues).
+a [bug report](https://github.com/ibm-early-programs/node-red-contrib-mqrest-client/issues).
 Before that, please search for similar issues. It's possible somebody has already encountered this issue.
 
 ## Pull Requests
@@ -25,11 +25,11 @@ If you want to contribute to the repository, follow these steps:
 ### Getting started
 
 * Install [Node-RED](http://nodered.org/)
-* Fork [this repo](https://github.com/ ibm-early-programs/node-red-contrib-mqi-client)
+* Fork [this repo](https://github.com/ ibm-early-programs/node-red-contrib-mqrest-client)
 * Clone the project
 * Create an npm link to your forked project
   * Within the cloned directory, run `npm link`
-  * Within the Node-RED directory, run `npm link node-red-contrib-mqi-client`
+  * Within the Node-RED directory, run `npm link node-red-contrib-mqrest-client`
 * Run Node-RED
 
 Now you should have the media nodes installed in your local palette, allowing you to work on your project locally.
