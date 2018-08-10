@@ -13,7 +13,7 @@ The function node is used to read with delete messages from a MQ queue.
 ## Configuration
 Use the configuration to specify the full API URL. Which will look something like:
 
-https://&lt;host&gt;:<port>/ibmmq/rest/v1/messaging/qmgr/<queue manager>/queue/<queue>/message
+https://&lt;host&gt;:&lt;port&gt;/ibmmq/rest/v1/messaging/qmgr/&lt;queue manager&gt;/queue/&lt;queue&gt;/message
 
 Where:
 <dl>
