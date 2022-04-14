@@ -14,7 +14,7 @@
   limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="mqrest-config">
+<script type="text/html" data-template-name="mqrest-config">
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-config-input-name" placeholder="Name">
@@ -24,15 +24,40 @@
         <label for="node-config-input-username"><i class="fa fa-user"></i> Username</label>
         <input type="text" id="node-config-input-username">
     </div>
+
     <div class="form-row">
         <label for="node-config-input-password"><i class="fa fa-lock"></i> Password</label>
         <input type="password" id="node-config-input-password">
     </div>
 
     <div class="form-row">
-        <label for="node-config-input-url"><i class="fa fa-bookmark"></i> URL</label>
-        <input class="input-append-left" type="text" id="node-config-input-url"
-               placeholder="https://<hostname>:<port>/ibmmq/rest/v1/messaging/qmgr/<queue manager>/queue/<queue>/message">
+        <label for="node-config-input-host"><i class="fa fa-bookmark"></i> Host</label>
+        <input class="input-append-left" type="text" id="node-config-input-host"
+               placeholder="<hostname>">
+    </div>
+
+    <div class="form-row">
+        <label for="node-config-input-port"><i class="fa fa-bookmark"></i> Port</label>
+        <input class="input-append-left" type="text" id="node-config-input-port"
+               placeholder="<port>">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-config-input-version"><i class="fa fa-bookmark"></i> REST API Version</label>
+        <input class="input-append-left" type="text" id="node-config-input-version"
+        placeholder="v1">
+    </div>
+
+    <div class="form-row">
+        <label for="node-config-input-qmgr"><i class="fa fa-bookmark"></i> QMGR Name</label>
+        <input class="input-append-left" type="text" id="node-config-input-qmgr"
+        placeholder="<qmgrName>">
+    </div>
+
+    <div class="form-row">
+        <label for="node-config-input-qname"><i class="fa fa-bookmark"></i> Queue Name</label>
+        <input class="input-append-left" type="text" id="node-config-input-qname"
+        placeholder="<queueName">
     </div>
 
     <div class="form-row">
@@ -43,7 +68,7 @@
 
 </script>
 
-<script type="text/x-red" data-help-name="mqrest-config">
+<script type="text/html" data-help-name="mqrest-config">
   <p>This is the configuration node for the MQ REST Nodes
   </p>
   <p>Use this node to specify the userid / password credentials to use when
@@ -63,9 +88,14 @@
         category: "config",
         color: "rgb(160, 50, 50)",
         defaults: {
-            url: {value:"", required:true},
+            // url: {value:"", required:true},
+            name: {value:""},
+            host: {value:"", required:true},
+            port: {value:"", required:true},
+            version: {value:"v1"},
+            qmgrName: {value:"", required:true},
+            qname: {value:"", required:true},
             token: {value:""},
-            name: {value:""}
         },
         credentials: {
             username: {type:"text"},

@@ -16,10 +16,9 @@
  module.exports = function(RED) {
 
    function Node(config) {
-     var node = this;
      RED.nodes.createNode(this, config);
 
-     this.url = config.url;
+     this.url = `https://${config.host}:${config.port}/ibmmq/rest/${config.version}/messaging/qmgr/${config.qmgr}/queue/${config.qname}/message`;
      this.token = config.token;
      //this.contentType = config.contentType;
 
