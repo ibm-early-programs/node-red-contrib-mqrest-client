@@ -14,8 +14,9 @@
  * limitations under the License.
  **/
 
-module.exports = function(RED) {
-  const request = require('request');
+module.exports = function (RED) {
+  const https = require('https');
+  const axios = require('axios');
   const Utils = require('./mqrest-utils');
 
   function verifyPayload(msg, config) {
@@ -40,17 +41,16 @@ module.exports = function(RED) {
     }
   }
 
-  function postToQueue(msg, config, connection, data) {
+  function postToQueue(config, connection, data) {
     return new Promise(function resolver(resolve, reject) {
       //console.log('Configuration looks like ', config);
       //console.log('Connection information looks like ', connection);
-
-      request({
-        uri: connection.url,
+      axios({
+        url: connection.url,
         method: 'POST',
-        'auth': {
-          'user': connection.username,
-          'pass': connection.password,
+        auth: {
+          username: connection.username,
+          password: connection.password,
         },
         headers: {
           'ibm-mq-rest-csrf-token': connection.token,
@@ -59,14 +59,11 @@ module.exports = function(RED) {
         rejectUnauthorized: false,
         //requestCert: true,
         //agent: false,
-        body: data
-      }, (error, response, body) => {
-
-        if (error) {
-          console.log(response);
-          reject(error);
-        } else {
-          switch (response.statusCode) {
+        data: data,
+        httpsAgent: new https.Agent({ rejectUnauthorized: false })
+      })
+        .then(function (response) {
+          switch (response.status) {
             case 200:
             case 201:
               resolve();
@@ -75,9 +72,20 @@ module.exports = function(RED) {
               reject('Error Invoking API ' + response.statusCode);
               break;
           }
-        }
-      });
-
+        })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error',error.message);
+          }
+          console.log(error.config);
+          reject(error);
+        });
     });
   }
 
@@ -90,7 +98,7 @@ module.exports = function(RED) {
 
     node.connectionNode = RED.nodes.getNode(config.connection);
 
-    this.on('input', function(msg) {
+    this.on('input', function (msg) {
       //var message = '';
       node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
@@ -98,14 +106,14 @@ module.exports = function(RED) {
 
       verifyPayload(msg, config)
         .then((data) => {
-          return postToQueue(msg, config, node.connectionNode, data);
+          return postToQueue(config, node.connectionNode, data);
         })
-        .then(function() {
+        .then(function (msg) {
           node.status({ fill: 'blue', shape: 'dot', text: 'payload posted onto queue' });
           node.send(msg);
         })
-        .catch(function(err) {
-          utils.reportError(msg,err);
+        .catch(function (err) {
+          utils.reportError(msg, err);
           node.send(msg);
         });
     });

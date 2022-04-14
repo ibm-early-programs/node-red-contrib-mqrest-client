@@ -14,8 +14,9 @@
  * limitations under the License.
  **/
 
-module.exports = function(RED) {
-  const request = require('request');
+module.exports = function (RED) {
+  const https = require('https');
+  const axios = require('axios');
   const Utils = require('./mqrest-utils');
 
   function processResponseData(msg, data) {
@@ -26,50 +27,61 @@ module.exports = function(RED) {
       try {
         b = JSON.parse(data);
       }
-      catch(e) {
+      catch (e) {
       }
       msg.payload = b;
     }
 
-    return Promise.resolve();
+    return Promise.resolve(msg);
   }
 
-  function readFromQueue(msg, config, connection) {
+  function readFromQueue(connection) {
     return new Promise(function resolver(resolve, reject) {
-      //console.log('Configuration looks like ', config);
-      //console.log('Connection information looks like ', connection);
+      // console.log('Configuration looks like ', config);
+      // console.log('Connection information looks like ', connection);
 
-      request({
-        uri: connection.url,
+      axios({
+        url: connection.url,
         method: 'DELETE',
-        'auth': {
-          'user': connection.username,
-          'pass': connection.password,
+        auth: {
+          username: connection.username,
+          password: connection.password,
         },
         headers: {
-          'ibm-mq-rest-csrf-token': connection.token
+          'ibm-mq-rest-csrf-token': connection.token,
+          'Accept': 'text/plain'
         },
-        rejectUnauthorized: false
-      }, (error, response, body) => {
-        if (error) {
-          console.log(response);
-          reject(error);
-        } else {
-          switch (response.statusCode) {
+        rejectUnauthorized: false,
+        httpsAgent: new https.Agent({ rejectUnauthorized: false })
+      })
+        .then(function (response) {
+
+          switch (response.status) {
             case 200:
             case 201:
-              resolve(body);
+              resolve(response.data);
               break;
             case 204:
               reject('Queue is empty');
               break;
             default:
-              reject('Error Invoking API ' + response.statusCode);
+              reject('Error Invoking API ' + response.status);
               break;
           }
-        }
-      });
-
+        })
+        .catch(function (error) {
+          if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            console.log(error.request);
+          } else {
+            console.log('Error',error.message);
+          }
+          console.log(error.config);
+          reject(error);
+        });
     });
   }
 
@@ -82,22 +94,21 @@ module.exports = function(RED) {
 
     node.connectionNode = RED.nodes.getNode(config.connection);
 
-    this.on('input', function(msg) {
+    this.on('input', function (msg) {
       //var message = '';
       node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
       var connection = null;
-
-      readFromQueue(msg, config, node.connectionNode)
+      readFromQueue(node.connectionNode)
         .then((data) => {
           node.status({ fill: 'green', shape: 'dot', text: 'message received' });
           return processResponseData(msg, data);
         })
-        .then(function() {
+        .then(function (msg) {
           node.status({});
           node.send(msg);
         })
-        .catch(function(err) {
+        .catch(function (err) {
           utils.reportError(msg, err);
           node.send(msg);
         });
