@@ -3,7 +3,8 @@
   "version": "0.0.2",
   "description": "MQI Clients",
   "dependencies": {
-    "request": "^2.85.0"
+    "axios": "^0.26.1",
+    "request": "^2.88.2"
   },
   "repository": {
     "type": "git",
