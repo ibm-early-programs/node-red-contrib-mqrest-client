@@ -26,7 +26,9 @@
     "nodes": {
       "mqi": "nodes/v1.js",
       "mqi-out": "nodes/v1-out.js",
-      "mqi-config": "nodes/v1-config.js"
+      "mqi-config": "nodes/v1-config.js",
+      "mqi-usrconfig": "nodes/user-config.js"
+      
     }
   },
   "engines": {
