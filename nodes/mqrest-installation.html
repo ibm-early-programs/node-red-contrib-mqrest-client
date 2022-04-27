@@ -1,0 +1,98 @@
+<!--
+  Copyright 2022 IBM Corp.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/html" data-template-name="mqrest-installation">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="name">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-user"><i class="fa fa-folder-close"></i> User</label>
+    <select id="node-input-user" style="width:68%;">
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-host"><i class="fa fa-tag"></i> Host</label>
+    <input type="text" id="node-input-host" placeholder="localhost">
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-port"><i class="fa fa-tag"></i> Port</label>
+    <input type="text" id="node-input-port" placeholder="9443">
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-version"><i class="fa fa-tag"></i> API Version</label>
+    <input type="text" id="node-input-version" placeholder="1">
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-installName"><i class="fa fa-tag"></i> Install Name</label>
+    <input type="text" id="node-input-installName" placeholder="installName">
+  </div>
+  
+</script>
+  
+<script type="text/html" data-help-name="mqrest-installation">
+  <p>This node makes use of the MQ REST API to retrieve details of the IBM MQ installation that is associated with this REST API. Use the
+  node properties to specify a installation name, or leave blank to retrieve all installations.</p>
+
+</script>
+  
+  <style type="text/css">
+    .node_label_white {
+      fill: white;
+    }
+  
+    #palette_node_mqrest>div.palette_label {
+      color: white;
+    }
+  </style>
+  
+  <script type="text/javascript">
+    (function() {
+      RED.nodes.registerType('mqrest-installation', {
+        category: 'output',
+        defaults: {
+          name: { value: '' },
+          installName: { value: ""},
+          user: { value: "", type: "user-config", required:true},
+          host: { value: '', required:true},
+          port: { value: '', required:true},
+          version: { value: ''}
+        },
+        credentials: {
+        },
+        color: 'rgb(50,75,75)',
+        inputs: 1,
+        outputs: 1,
+        paletteLabel: 'MQ Installation',
+        icon: 'feed.png',
+        label: function() {
+          return this.name || 'MQ Installation';
+        },
+        labelStyle: function() {
+          return this.name ? 'node_label_italic node_label_white' : 'node_label_white';
+        }
+      });
+    })();
+  </script>
+  

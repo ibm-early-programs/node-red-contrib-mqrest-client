@@ -27,6 +27,10 @@
       "mqi": "nodes/v1.js",
       "mqi-out": "nodes/v1-out.js",
       "mqi-config": "nodes/v1-config.js",
+      "mqi-pub": "nodes/mqrest-pub.js",
+      "mqi-channel": "nodes/mqrest-channel.js",
+      "mqi-installation": "nodes/mqrest-installation.js",
+      "mqi-msgconfig": "nodes/msg-config.js",
       "mqi-usrconfig": "nodes/user-config.js"
       
     }
