@@ -1,0 +1,102 @@
+<!--
+  Copyright 2022 IBM Corp.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/html" data-template-name="msg-config">
+  <div class="form-row">
+    <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-config-input-name" placeholder="Name">
+  </div>
+  
+  <div class="form-row">
+    <label for="node-config-input-host"><i class="fa fa-bookmark"></i> Host</label>
+    <input class="input-append-left" type="text" id="node-config-input-host"
+           placeholder="<hostname>">
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-port"><i class="fa fa-bookmark"></i> Port</label>
+    <input class="input-append-left" type="text" id="node-config-input-port"
+            placeholder="<port>">
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-apiv"><i class="fa fa-bookmark"></i> API Version</label>
+    <input class="input-append-left" type="text" id="node-config-input-apiv" 
+            placeholder="1">
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-qmgr"><i class="fa fa-bookmark"></i> QMGR Name</label>
+    <input class="input-append-left" type="text" id="node-config-input-qmgr"
+    placeholder="<qmgrName>">
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-qname"><i class="fa fa-bookmark"></i> Queue Name</label>
+    <input class="input-append-left" type="text" id="node-config-input-qname"
+    placeholder="<queueName> optional">
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-topic"><i class="fa fa-bookmark"></i> Topic string</label>
+    <input class="input-append-left" type="text" id="node-config-input-topic"
+    placeholder="<topicString> optional">
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-token"><i class="fa fa-bookmark"></i> MQ REST CSRF Token</label>
+    <input class="input-append-left" type="text" id="node-config-input-token"
+           placeholder="blank">
+  </div>
+</script>
+
+<script type="text/html" data-help-name="msg-config">
+  <p>This is the configuration node for the MQ REST Nodes
+  </p>
+  <p>Use this node to specify the userid / password credentials to use when
+  reading from and writing to MQ Queues.</p>
+  <p>Specify the REST endpoint and method in the url field. This will be
+  <code>'https://&lt;hostname/>:&lt;port&gt;/ibmmq/rest/v1/messaging/qmgr/&lt;queue manager&gt;/queue/&lt;queue&gt;/message'</code> then this will
+  </p>
+  <p>eg. for a localised docker image running MQ on port 9443
+  with a queue manager of <code>QM1</code>i
+  and a queue of <code>DEV.QUEUE.1</code> this will be:</p>
+  <code>'https://localhost:9443/ibmmq/rest/v1/messaging/qmgr/QM1/queue/DEV.QUEUE.1/message'</code>
+  <p>If you are not passing in a CSRF token then specify blank.</p>
+</script>
+
+<script type="text/javascript">
+  RED.nodes.registerType("msg-config", {
+    category: "config",
+    color: "rgb(160, 50, 50)",
+    defaults: {
+      // url: {value:"", required:true},
+      name: { value: "", required: true },
+      host: { value: "", required: true },
+      port: { value: "", required: true },
+      apiv: { value: "" },
+      qmgr: { value: "", required: true },
+      qname: { value: "" },
+      topic: { value: "" },
+      token: { value: "" },
+    },
+
+    label: function () {
+      return this.name || this.host;
+    }
+  });
+</script>
