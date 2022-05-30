@@ -1,0 +1,95 @@
+<!--
+  Copyright 2022 IBM Corp.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/html" data-template-name="mqrest-qmgr">
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    
+    <div class="form-row">
+      <label for="node-input-user"><i class="fa fa-folder-close"></i> User</label>
+      <select id="node-input-user" style="width:68%;">
+      </select>
+    </div>
+  
+    <div class="form-row">
+      <label for="node-input-server"><i class="fa fa-folder-close"></i> Server</label>
+      <select id="node-input-server" style="width:68%">
+      </select>
+    </div>
+  
+    <div class="form-row">
+      <label for="node-input-apiv"><i class="fa fa-folder-close"></i> API Version</label>
+      <input type="text" id="node-input-apiv">
+    </div>
+  
+    <div class="form-row">
+      <label for="node-input-qmgr"><i class="fa fa-tag"></i> qmgr</label>
+      <input type="text" id="node-input-qmgr" placeholder="<qmgr>">
+    </div>
+  
+</script>
+
+<script type="text/html" data-help-name="mqrest-qmgr">
+    <p>This node makes use of the MQ REST API to publish messages to an MQ Topic. Use the
+    configuration to specify the full API URL.</p>
+  
+    <p>The message to publish to the Topic is provided as input in <code>msg.payload</code>.</p>
+    <p>Specify the expected content type in the configuration. The node will check that
+    the contents of <code>msg.payload</code> matches the specified type.</p>
+  </script>
+
+<script type="text/javascript">
+    (function () {
+        RED.nodes.registerType('mqrest-qmgr', {
+            category: 'output',
+            defaults: {
+                name: { value: '' },
+                user: { value: "", type: "user-config" },
+                server: { value: "", type: "server-config"},
+                qmgr: { value: null},
+                apiv: { value: ''}
+            },
+            credentials: {
+            },
+            color: 'rgb(50,75,75)',
+            inputs: 1,
+            outputs: 1,
+            paletteLabel: 'Admin QMGR',
+            icon: 'feed.png',
+            label: function () {
+                return this.name || 'Admin QMGR';
+            },
+            labelStyle: function () {
+                return this.name ? 'node_label_italic node_label_white' : 'node_label_white';
+            },
+            oneditprepare: function () {
+              $("#node-input-apiv").typedInput({
+                types: [
+                  {
+                    value: "version",
+                    options: [
+                      { value: "v1", label: "1" },
+                      { value: "v2", label: "2" }
+                    ]
+                  }
+                ]
+              })
+            }
+        });
+    })();
+</script>
