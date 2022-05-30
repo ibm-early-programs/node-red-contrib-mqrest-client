@@ -1,0 +1,128 @@
+<!--
+  Copyright 2022 IBM Corp.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/html" data-template-name="mqrest-login">
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    
+    <div class="form-row">
+      <label for="node-input-user"><i class="fa fa-folder-close"></i> User</label>
+      <select id="node-input-user" style="width:68%;">
+      </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-server"><i class="fa fa-folder-close"></i> Server</label>
+        <select id="node-input-server" style="width:68%">
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-op"><i class="fa fa-folder-close"></i> Operation</label>
+        <input type="text" id="node-input-op">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-apiv"><i class="fa fa-folder-close"></i> API Version</label>
+        <input type="text" id="node-input-apiv">
+    </div>
+
+
+    <div class="form-row">
+        <label for="node-input-token"><i class="fa fa-bookmark"></i> MQ REST CSRF Token</label>
+        <input class="input-append-left" type="text" id="node-input-token"
+            placeholder="blank">
+    </div>
+
+  
+  </script>
+
+<script type="text/html" data-help-name="mqrest-login">
+    <p>This node makes use of the MQ REST API to publish messages to an MQ Topic. Use the
+    configuration to specify the full API URL.</p>
+  
+    <p>The message to publish to the Topic is provided as input in <code>msg.payload</code>.</p>
+    <p>Specify the expected content type in the configuration. The node will check that
+    the contents of <code>msg.payload</code> matches the specified type.</p>
+  </script>
+
+<style type="text/css">
+    .node_label_white {
+        fill: white;
+    }
+
+    #palette_node_mqrest-out>div.palette_label {
+        color: white;
+    }
+</style>
+
+<script type="text/javascript">
+    (function () {
+        RED.nodes.registerType('mqrest-login', {
+            category: 'output',
+            defaults: {
+                name: { value: '' },
+                user: { value: "", type: "user-config" },
+                op: { value: ''},
+                server: { value: "", type: "server-config" },
+                apiv: {value: ''},
+                token: { value: "" },
+            },
+            credentials: {
+            },
+            color: 'rgb(50,75,75)',
+            inputs: 1,
+            outputs: 1,
+            paletteLabel: 'REST LOGIN',
+            icon: 'feed.png',
+            label: function () {
+                return this.name || 'REST LOGIN';
+            },
+            labelStyle: function () {
+                return this.name ? 'node_label_italic node_label_white' : 'node_label_white';
+            },
+            oneditprepare: function () {
+                $("#node-input-op").typedInput({
+                    types: [
+                        {
+                            value: "operations",
+                            options: [
+                                { value: "POST", label: "Log in" },
+                                { value: "DELETE", label: "Log out" },
+                                { value: "GET", label: "Querie User" },
+                            ]
+                        }
+                    ]
+                }),
+                $("#node-input-apiv").typedInput({
+                    types: [
+                        {
+                            value: "version",
+                            options: [
+                                { value: "v1", label: "1" },
+                                { value: "v2", label: "2" }
+                            ]
+                        }
+                    ]
+                })
+
+            }
+
+        });
+    })();
+</script>
