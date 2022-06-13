@@ -39,17 +39,14 @@
 
   <div class="form-row">
     <label for="node-input-agentName"><i class="fa fa-tag"></i> Agent Name</label>
-    <input type="text" id="node-input-agentName" placeholder="<agentName>">
+    <input type="text" id="node-input-agentName" placeholder="<agentName> (optional)">
   </div>
 </script>
 
 <script type="text/html" data-help-name="mft-agent">
-  <p>This node makes use of the MQ REST API to publish messages to an MQ Topic. Use the
-  configuration to specify the full API URL.</p>
+  <p>This node makes use of the MQ REST API to retrieve details of agent(s) that are registered under the coordination queue manger.</p>
 
-  <p>The message to publish to the Topic is provided as input in <code>msg.payload</code>.</p>
-  <p>Specify the expected content type in the configuration. The node will check that
-  the contents of <code>msg.payload</code> matches the specified type.</p>
+  <p>Use the configuration to specify node behaviour and parameters.</p>
 </script>
 
 <style type="text/css">

@@ -45,10 +45,11 @@
 </script>
 
 <script type="text/html" data-help-name="mft-transfer-retrieve">
-  <p>This node makes use of the MQ REST API to publish messages to an MQ Topic. Use the
-  configuration to specify the full API URL.</p>
+  <p>This node makes use of the MQ REST API to retrieve details of transfers from the Queue Manager. </p>
 
-  <p>The message to publish to the Topic is provided as input in <code>msg.payload</code>.</p>
+  <p>
+    Use the configuration to specify node parameters.
+  </p>
   <p>Specify the expected content type in the configuration. The node will check that
   the contents of <code>msg.payload</code> matches the specified type.</p>
 </script>
@@ -76,7 +77,7 @@
             },
             credentials: {
             },
-            color: 'rgb(50,75,75)',
+            color: '#C7E9C0',
             inputs: 1,
             outputs: 1,
             paletteLabel: 'MFT Transfer (rtv)',
@@ -85,7 +86,7 @@
                 return this.name || 'MFT Transfer (rtv)';
             },
             labelStyle: function () {
-                return this.name ? 'node_label_italic node_label_white' : 'node_label_white';
+                return this.name ? 'node_label_italic node_label_black' : 'node_label_black';
             },
             oneditprepare: function () {
               $("#node-input-apiv").typedInput({
