@@ -41,20 +41,21 @@ module.exports = function (RED) {
     }
   }
 
-  function postToQueue(config, connection, data) {
+  function postToQueue(config, user, contentType, data) {
     return new Promise(function resolver(resolve, reject) {
-      //console.log('Configuration looks like ', config);
-      //console.log('Connection information looks like ', connection);
+      // console.log('Configuration looks like ', config);
+      // console.log(`https://${config.host}:${config.port}/ibmmq/rest/v${config.apiv}/messaging/qmgr/${config.qmgr}/queue/${config.qname}/message`,)
+
       axios({
-        url: connection.url,
+        url: `https://${config.host}:${config.port}/ibmmq/rest/v${config.apiv}/messaging/qmgr/${config.qmgr}/queue/${config.qname}/message`,
         method: 'POST',
         auth: {
-          username: connection.username,
-          password: connection.password,
+          username: user.username,
+          password: user.password,
         },
         headers: {
-          'ibm-mq-rest-csrf-token': connection.token,
-          'Content-Type': config.contentType
+          'ibm-mq-rest-csrf-token': config.token,
+          'Content-Type': contentType
         },
         rejectUnauthorized: false,
         //requestCert: true,
@@ -76,14 +77,14 @@ module.exports = function (RED) {
         .catch(function (error) {
           if (error.response) {
             console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            // console.log(error.response.status);
+            // console.log(error.response.headers);
           } else if (error.request) {
             console.log(error.request);
           } else {
             console.log('Error',error.message);
           }
-          console.log(error.config);
+          // console.log(error.config);
           reject(error);
         });
     });
@@ -96,17 +97,16 @@ module.exports = function (RED) {
 
     RED.nodes.createNode(this, config);
 
-    node.connectionNode = RED.nodes.getNode(config.connection);
+    this.user = RED.nodes.getNode(config.user);
+    this.msgconfig = RED.nodes.getNode(config.msgconfig);
 
     this.on('input', function (msg) {
       //var message = '';
       node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-      var connection = null;
-
       verifyPayload(msg, config)
         .then((data) => {
-          return postToQueue(config, node.connectionNode, data);
+          return postToQueue(this.msgconfig, this.user, config.contentType, data);
         })
         .then(function (msg) {
           node.status({ fill: 'blue', shape: 'dot', text: 'payload posted onto queue' });

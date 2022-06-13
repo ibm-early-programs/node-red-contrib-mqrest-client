@@ -35,20 +35,20 @@ module.exports = function (RED) {
     return Promise.resolve(msg);
   }
 
-  function readFromQueue(connection) {
+  function readFromQueue(user, config, op) {
     return new Promise(function resolver(resolve, reject) {
-      // console.log('Configuration looks like ', config);
-      // console.log('Connection information looks like ', connection);
+      // console.log('User config looks like ', user);
+      // console.log('Connection information looks like ', config);
 
       axios({
-        url: connection.url,
-        method: 'DELETE',
+        url: `https://${config.host}:${config.port}/ibmmq/rest/v${config.apiv}/messaging/qmgr/${config.qmgr}/queue/${config.qname}/message`,
+        method: op,
         auth: {
-          username: connection.username,
-          password: connection.password,
+          username: user.username,
+          password: user.password,
         },
         headers: {
-          'ibm-mq-rest-csrf-token': connection.token,
+          'ibm-mq-rest-csrf-token': config.token,
           'Accept': 'text/plain'
         },
         rejectUnauthorized: false,
@@ -79,7 +79,7 @@ module.exports = function (RED) {
           } else {
             console.log('Error',error.message);
           }
-          console.log(error.config);
+          console.log("error.config ",error.config);
           reject(error);
         });
     });
@@ -92,14 +92,14 @@ module.exports = function (RED) {
 
     RED.nodes.createNode(this, config);
 
-    node.connectionNode = RED.nodes.getNode(config.connection);
+    this.user = RED.nodes.getNode(config.user);
+    this.msgconfig = RED.nodes.getNode(config.msgconfig);
+    this.op = config.op;
 
     this.on('input', function (msg) {
-      //var message = '';
       node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-      var connection = null;
-      readFromQueue(node.connectionNode)
+      readFromQueue(this.user, this.msgconfig, this.op)
         .then((data) => {
           node.status({ fill: 'green', shape: 'dot', text: 'message received' });
           return processResponseData(msg, data);
@@ -109,6 +109,7 @@ module.exports = function (RED) {
           node.send(msg);
         })
         .catch(function (err) {
+          msg.payload = err;
           utils.reportError(msg, err);
           node.send(msg);
         });

@@ -31,8 +31,18 @@
       "mqi-channel": "nodes/mqrest-channel.js",
       "mqi-installation": "nodes/mqrest-installation.js",
       "mqi-msgconfig": "nodes/msg-config.js",
-      "mqi-usrconfig": "nodes/user-config.js"
-      
+      "mqi-usrconfig": "nodes/user-config.js",
+      "mqi-login": "nodes/mqrest-login.js",
+      "mqi-svrconfig": "nodes/server-config.js",
+      "mqi-mftagent": "nodes/mft-agent.js",
+      "mqi-trf-rtv": "nodes/mft-transfer-retrieve.js",
+      "mqi-trf-crt": "nodes/mft-transfer-create.js",
+      "mqi-mft-monitor": "nodes/mft-monitor.js",
+      "mqi-qmgr": "nodes/mqrest-qmgr.js",
+      "mqi-mqsc": "nodes/qmgr-mqsc.js",
+      "mqi-queue": "nodes/mqrest-queue.js",
+      "mqi-sub": "nodes/mqrest-sub.js"
+
     }
   },
   "engines": {

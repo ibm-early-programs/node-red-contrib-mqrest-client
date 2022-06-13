@@ -14,15 +14,21 @@
   limitations under the License.
 -->
 
-<script type="text/x-red" data-template-name="mqrest-out">
+<script type="text/html" data-template-name="mqrest-out">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
   </div>
 
   <div class="form-row">
-    <label for="node-input-connection"><i class="fa fa-folder-close"></i> MQ Server</label>
-    <select id="node-input-connection" style="width:68%;">
+    <label for="node-input-user"><i class="fa fa-folder-close"></i> User</label>
+    <select id="node-input-user" style="width:68%;">
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-msgconfig"><i class="fa fa-folder-close"></i> Message config</label>
+    <select id="node-input-msgconfig" style="width:68%;">
     </select>
   </div>
 
@@ -33,15 +39,19 @@
       <option value="application/json">application/json</option>
     </select>
   </div>
+
+  <!-- <div class="form-row">
+    <input type="checkbox" id="node-input-debug"
+  </div> -->
 </script>
 
-<script type="text/x-red" data-help-name="mqrest-out">
+<script type="text/html" data-help-name="mqrest-out">
   <p>This node makes use of the MQ REST API to write messages to a MQ Queue. Use the
-  configuration to specify the full API URL.</p>
+  configuration to specify parameters.</p>
 
   <p>The message to post onto the queue is provided as input in <code>msg.payload</code>.</p>
   <p>Specify the expected content type in the configuration. The node will check that
-  the contents of <code>msg.payload</code> match the specified type.</p>
+  the contents of <code>msg.payload</code> matches the specified type.</p>
 </script>
 
 <style type="text/css">
@@ -61,20 +71,22 @@
       defaults: {
         name: { value: '' },
         contentType: { value: '' },
-        connection: { value:"", type:"mqrest-config" }
+        user: { value: "", type:"user-config"},
+        msgconfig: { value:"", type:"msg-config" },
+        debug: { value: '' }
       },
       credentials: {
       },
-      color: 'rgb(50,75,75)',
+      color: '#C7E9C0',
       inputs: 1,
       outputs: 0,
-      paletteLabel: 'MQ REST',
+      paletteLabel: 'MQ PUT',
       icon: 'feed.png',
       label: function() {
-        return this.name || 'MQ REST';
+        return this.name || 'MQ PUT';
       },
       labelStyle: function() {
-        return this.name ? 'node_label_italic node_label_white' : 'node_label_white';
+        return this.name ? 'node_label_italic node_label_black' : 'node_label_black';
       }
     });
   })();
