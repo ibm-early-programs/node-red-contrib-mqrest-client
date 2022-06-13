@@ -38,6 +38,7 @@
             <option value="GET">GET</option>
             <option value="POST">POST</option>
             <option value="DELETE">DELETE</option>
+            <option value="PATCH">PATCH</option>
         </select>
     </div>
     
@@ -50,8 +51,6 @@
         <label for="node-input-apiv"><i class="fa fa-folder-close"></i>API Version</label>
         <select type="text" id="node-input-apiv" style="width:68%">
             <option value="v1">1</option>
-            <option value="v2">2</option>
-            <option value="v3">3</option>
         </select>
     </div>
     
@@ -144,6 +143,14 @@
     <input type="text" id="node-input-gatewayQmgr" placeholder="gateway qmgr" />
   </div>
 
+  <div id="node-row-force" class="form-row hidden">
+    <label for="node-input-force"><i class="fa fa-folder-close"></i>force</label>
+    <select type="text" id="node-input-force" style="width:68%">
+      <option value="True">True</option>
+      <option value="False">False</option>
+    </select>
+  </div>
+
 
 
 </script>
@@ -191,6 +198,7 @@
                 csrf: { value: '' },
                 keepAuthorityRecords: { value: '' },
                 qName: { value: ''},
+                force: { value: ''},
 
             },
             credentials: {},
@@ -237,6 +245,7 @@
                             $("#node-row-qName").hide();
                             $("#node-row-keepAuthorityRecords").hide();
                             $("#node-row-purge").hide();
+                            $("#node-row-force").hide();
 
                             $("#node-row-like").show();
                             $("#node-row-noReplace").show();
@@ -253,13 +262,40 @@
                             $("#node-row-status").hide();
                             $("#node-row-appHandle").hide();
                             $("#node-row-filter").hide();
+                            $("#node-row-like").hide();
+                            $("#node-row-noReplace").hide();
+                            $("#node-row-body").hide();
+                            $("#node-row-force").hide();
 
                             $("#node-row-qName").show();
+                            $("#node-row-keepAuthorityRecords").show();
                             $("#node-row-purge").show();
-                            $("#node-row-qsgd").show();
-                            $("#node-row-gatwayQmgr").show();
                             $("#node-row-cmdScope").show();
+                            $("#node-row-qsgd").show();
+                            $("#node-row-csrf").show();
+                            $("#node-row-gatwayQmgr").show();
                             break;
+
+                        case "PATCH":
+                            $("#node-row-qType").hide();
+                            $("#node-row-wildQname").hide();
+                            $("#node-row-attributes").hide();
+                            $("#node-row-status").hide();
+                            $("#node-row-appHandle").hide();
+                            $("#node-row-filter").hide();
+                            $("#node-row-like").hide();
+                            $("#node-row-noReplace").hide();
+                            $("#node-row-keepAuthorityRecords").hide();
+                            $("#node-row-purge").hide();
+                            $("#node-row-qsgd").hide();
+                            
+                            $("#node-row-qName").show();
+                            $("#node-row-force").show();
+                            $("#node-row-cmdScope").show();
+                            $("#node-row-body").show();
+                            $("#node-row-csrf").show();
+                            $("#node-row-gatwayQmgr").show();
+
 
                     }
                 };

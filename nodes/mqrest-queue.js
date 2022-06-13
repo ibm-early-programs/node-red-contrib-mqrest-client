@@ -14,6 +14,8 @@
  * limitations under the License.
  **/
 
+const { patch } = require("request");
+
 module.exports = function (RED) {
     const https = require("https");
     const axios = require("axios");
@@ -47,6 +49,9 @@ module.exports = function (RED) {
 
             case "DELETE":
                 return dlt(user, server, config);
+
+            case "PATCH":
+                return ptch(user, server, config);
 
         }
 
@@ -169,6 +174,44 @@ module.exports = function (RED) {
                 });
 
         });
+    }
+
+    function ptch(user, server, config){
+        return new Promise(function resolver(resolve, reject) {
+            axios({
+                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${config.qmgrName}/queue/${config.qName}`,
+                method: config.operation,
+                auth: {
+                    username: user.username,
+                    password: user.password,
+                },
+                rejectUnauthorized: false,
+                httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+            })
+            .then(function (response) {
+                switch (response.status) {
+                    case 204:
+                        resolve(response.data);
+                        break;
+                    default:
+                        reject("Error invoking API " + response.status);
+                        break;
+
+                }
+            })
+            .catch(function (error) {
+                if (error.response) {
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log("Error", error.message);
+                }
+                reject(error);
+            });
+        })
     }
 
     function Node(config) {
