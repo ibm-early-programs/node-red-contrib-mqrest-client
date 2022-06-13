@@ -35,13 +35,14 @@
       return Promise.resolve(msg);
     }
   
-    function retreiveDetails(config, user) {
+    function retreiveDetails(user, server, config) {
       return new Promise(function resolver(resolve, reject) {
         // console.log('Configuration looks like ', config);
         // console.log('User information looks like ', user);
+        console.log(`https://${config.host}:${config.port}/ibmmq/rest/v1/admin/qmgr/${config.qmgr}/channel/${config.chnlName}`);
 
         axios({
-          url: `https://${config.host}:${config.port}/ibmmq/rest/v1/admin/qmgr/${config.qmgr}/channel/${config.chnlName}`,
+          url: `https://${server.host}:${server.port}/ibmmq/rest/v1/admin/qmgr/${config.qmgr}/channel/${config.chnlName}`,
           method: 'GET',
           auth: {
             username: user.username,
@@ -86,13 +87,14 @@
   
       RED.nodes.createNode(this, config);
 
-      this.user = RED.nodes.getNode(config.user)
+      this.user = RED.nodes.getNode(config.user);
+      this.server = RED.nodes.getNode(config.server);
   
       this.on('input', function (msg) {
         //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        retreiveDetails(config, this.user)
+        retreiveDetails(this.user, this.server, config)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
             return processResponseData(msg, data);
