@@ -39,7 +39,7 @@
       return new Promise(function resolver(resolve, reject) {
         // console.log('Configuration looks like ', config);
         // console.log('User information looks like ', user);
-        console.log(`https://${config.host}:${config.port}/ibmmq/rest/v1/admin/qmgr/${config.qmgr}/channel/${config.chnlName}`);
+        // console.log(`https://${config.host}:${config.port}/ibmmq/rest/v1/admin/qmgr/${config.qmgr}/channel/${config.chnlName}`);
 
         axios({
           url: `https://${server.host}:${server.port}/ibmmq/rest/v1/admin/qmgr/${config.qmgr}/channel/${config.chnlName}`,

@@ -39,9 +39,9 @@
     function runCommand(user, server, config) {
       return new Promise(function resolver(resolve, reject) {
 
-        console.log('Configuration looks like ', config);
-        console.log('User information looks like ', user);
-        console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${config.qmgr}/mqsc`);
+        // console.log('Configuration looks like ', config);
+        // console.log('User information looks like ', user);
+        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${config.qmgr}/mqsc`);
 
         axios({
           url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${config.qmgr}/mqsc`,
