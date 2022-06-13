@@ -24,9 +24,11 @@
       if(config.token === ''){
         config.token = "token";
       }
-      
-      this.host = config.host;
-      this.port = config.port;
+
+      var serverNode = RED.nodes.getNode(config.server);
+
+      this.host = serverNode.host;
+      this.port = serverNode.port;
       this.apiv = config.apiv;
       this.qmgr = config.qmgr;
       this.qname = config.qname;
