@@ -1,0 +1,160 @@
+<!--
+  Copyright 2022 IBM Corp.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/html" data-template-name="qmgr-mqsc">
+    <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    
+    <div class="form-row">
+      <label for="node-input-user"><i class="fa fa-folder-close"></i> User</label>
+      <select id="node-input-user" style="width:68%;">
+      </select>
+    </div>
+  
+    <div class="form-row">
+      <label for="node-input-server"><i class="fa fa-folder-close"></i> Server</label>
+      <select id="node-input-server" style="width:68%">
+      </select>
+    </div>
+  
+    <div class="form-row">
+      <label for="node-input-apiv"><i class="fa fa-folder-close"></i> API Version</label>
+      <input type="text" id="node-input-apiv">
+    </div>
+
+    <div class="form-row">
+      <label for="node-input-qmgr"><i class="fa fa-tag"></i> QMGR name</label>
+      <input type="text" id="node-input-qmgr" placeholder="<qmgrName>">
+    </div>
+    
+    <div class="form-row">
+      <label for="node-input-contentType"><i class="fa fa-book"></i> Content Type: </label>
+      <select type="text" id="node-input-contentType" style="display: inline-block; width: 70%;">
+        <option value="text/plain;charset=utf-8">text/plain;charset=utf-8</option>
+        <option value="application/json">application/json</option>
+      </select>
+    </div>
+    
+    <div class="form-row">
+      <label for="node-input-mqtoken"><i class="fa fa-bookmark"></i> MQ REST CSRF Token</label>
+      <input type="text" id="node-input-mqtoken" placeholder="blank">
+    </div>
+
+    <div class="form-row">
+      <label for="node-input-body"><i class="fa fa-bookmark"></i> Command</label>
+      <input type="text" id="node-input-body">
+
+    </div>
+
+    <div class="form-tips">
+      <b>Example:</b><br>
+      <pre>
+  {
+    "type": "runCommand",
+    "command": "string",
+    "qualifier": {},
+    "name": {},
+    "responseParameters": [
+    "string"
+    ],
+    "parameters": {
+      "command": "string"
+    }
+  }
+      </pre>
+    </div>
+    
+  </script>
+
+  <script type="text/html" data-help-name="qmgr-mqsc">
+    <p>This node makes use of the MQ REST API to run MQSC commands.</p>
+  
+    <p>Use the configuration to specify node parameters.</p>
+  </script>
+
+  <style type="text/css">
+    .node_label_white {
+        fill: white;
+    }
+
+    #palette_node_mqrest-out>div.palette_label {
+        color: white;
+    }
+</style>
+
+<script type="text/javascript">
+    (function () {
+        RED.nodes.registerType('qmgr-mqsc', {
+            category: 'output',
+            defaults: {
+                name: { value: '' },
+                user: { value: "", type: "user-config" },
+                server: { value: "", type: "server-config"},
+                apiv: { value: ''},
+                qmgr: { value: '', required: true},
+                contentType: { value: ''},
+                mqtoken: { value: ''},
+                body: { value: '', required: true}
+            },
+            credentials: {
+            },
+            color: '#C7E9C0',
+            inputs: 1,
+            outputs: 1,
+            paletteLabel: 'QMGR MQSC',
+            icon: 'feed.png',
+            label: function () {
+                return this.name || 'QMGR MQSC';
+            },
+            labelStyle: function () {
+                return this.name ? 'node_label_italic node_label_black' : 'node_label_black';
+            },
+            oneditprepare: function () {
+              $("#node-input-apiv").typedInput({
+                types: [
+                  {
+                    value: "version",
+                    options: [
+                      { value: "v1", label: "1" },
+                      { value: "v2", label: "2" }
+                    ]
+                  }
+                ]
+              });
+              $("#node-input-body").typedInput({
+                type: "json",
+                types:["json"]
+              });
+              this.editor = RED.editor.createEditor({
+                id: 'node-input-body',
+                mode: 'ace/mode/text',
+                value: this.command
+              });
+            },
+            oneditsave: function(){
+                this.command = this.editor.getValue();
+                this.editor.destroy();
+                delete this.editor;
+            },
+            oneditcancel: function(){
+                this.editor.destroy();
+                delete this.editor;
+            },
+        });
+    })();
+</script>
