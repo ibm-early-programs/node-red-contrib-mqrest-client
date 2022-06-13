@@ -35,17 +35,18 @@
       return Promise.resolve(msg);
     }
   
-    function retreiveDetails(config, user) {
+    function retreiveDetails(user, server, config) {
       return new Promise(function resolver(resolve, reject) {
-        // console.log('Configuration looks like ', config);
         // console.log('User information looks like ', user);
+        // console.log('Server information looks like ', server);
+        // console.log('Configuration looks like ', config);
 
-        if(config.version === ''){
-          config.version = 1;
+        if(config.apiv === ''){
+          config.apiv = 1;
         }
   
         axios({
-          url: `https://${config.host}:${config.port}/ibmmq/rest/v${config.version}/admin/installation/${config.installName}`,
+          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/installation/${config.installName}`,
           method: 'GET',
           auth: {
             username: user.username,
@@ -70,6 +71,7 @@
             }
           })
           .catch(function (error) {
+            console.log(`https://${server.host}:${server.port}/ibmmq/rest/v${config.version}/admin/installation/${config.installName}`);
             if (error.response) {
               console.log(error.response.data);
               // console.log(error.response.status);
@@ -92,12 +94,13 @@
       RED.nodes.createNode(this, config);
 
       this.user = RED.nodes.getNode(config.user);
+      this.server = RED.nodes.getNode(config.server);
   
       this.on('input', function (msg) {
         //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        retreiveDetails(config, this.user)
+        retreiveDetails(this.user, this.server, config)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
             return processResponseData(msg, data);

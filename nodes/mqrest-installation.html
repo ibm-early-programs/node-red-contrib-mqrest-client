@@ -27,26 +27,24 @@
   </div>
 
   <div class="form-row">
-    <label for="node-input-host"><i class="fa fa-tag"></i> Host</label>
-    <input type="text" id="node-input-host" placeholder="localhost">
+    <label for="node-input-server"><i class="fa fa-folder-close"></i> Server</label>
+    <select id="node-input-server" style="width:68%">
     </select>
   </div>
 
   <div class="form-row">
-    <label for="node-input-port"><i class="fa fa-tag"></i> Port</label>
-    <input type="text" id="node-input-port" placeholder="9443">
-    </select>
-  </div>
-
-  <div class="form-row">
-    <label for="node-input-version"><i class="fa fa-tag"></i> API Version</label>
-    <input type="text" id="node-input-version" placeholder="1">
+    <label for="node-input-apiv"><i class="fa fa-folder-close"></i> API Version</label>
+    <input type="text" id="node-input-apiv">
     </select>
   </div>
 
   <div class="form-row">
     <label for="node-input-installName"><i class="fa fa-tag"></i> Install Name</label>
     <input type="text" id="node-input-installName" placeholder="installName">
+  </div>
+
+  <div class="form-tips">
+    <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
   </div>
   
 </script>
@@ -75,13 +73,12 @@
           name: { value: '' },
           installName: { value: ""},
           user: { value: "", type: "user-config", required:true},
-          host: { value: '', required:true},
-          port: { value: '', required:true},
-          version: { value: ''}
+          server: { value: "", type: "server-config", required:true },
+          apiv: { value: ''}
         },
         credentials: {
         },
-        color: 'rgb(50,75,75)',
+        color: '#C7E9C0',
         inputs: 1,
         outputs: 1,
         paletteLabel: 'MQ Installation',
@@ -90,7 +87,20 @@
           return this.name || 'MQ Installation';
         },
         labelStyle: function() {
-          return this.name ? 'node_label_italic node_label_white' : 'node_label_white';
+          return this.name ? 'node_label_italic node_label_black' : 'node_label_black';
+        },
+        oneditprepare: function () {
+          $("#node-input-apiv").typedInput({
+            types: [
+              {
+                value: "apiv",
+                options: [
+                  { value: "v1", label: "1"},
+                  { value: "v2", label: "2"},
+                ]
+              }
+            ]
+          })
         }
       });
     })();
