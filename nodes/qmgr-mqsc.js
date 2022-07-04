@@ -36,7 +36,7 @@
       return Promise.resolve(msg);
     }
   
-    function runCommand(user, server, config) {
+    function runCommand(user, server, config, msg) {
       return new Promise(function resolver(resolve, reject) {
 
         // console.log('Configuration looks like ', config);
@@ -54,7 +54,7 @@
             'ibm-mq-rest-csrf-token': config.mqtoken,
             'Content-Type': config.contentType
           },
-          data: config.body,
+          data: msg.payload,
           rejectUnauthorized: false,
           httpsAgent: new https.Agent({ rejectUnauthorized: false })
         })
@@ -100,7 +100,7 @@
         //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        runCommand(this.user, this.server, config)
+        runCommand(this.user, this.server, config, msg)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
             return processResponseData(msg, data);
