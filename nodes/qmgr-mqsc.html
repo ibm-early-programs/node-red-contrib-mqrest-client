@@ -54,30 +54,6 @@
       <label for="node-input-mqtoken"><i class="fa fa-bookmark"></i> MQ REST CSRF Token</label>
       <input type="text" id="node-input-mqtoken" placeholder="blank">
     </div>
-
-    <div class="form-row">
-      <label for="node-input-body"><i class="fa fa-bookmark"></i> Command</label>
-      <input type="text" id="node-input-body">
-
-    </div>
-
-    <div class="form-tips">
-      <b>Example:</b><br>
-      <pre>
-  {
-    "type": "runCommand",
-    "command": "string",
-    "qualifier": {},
-    "name": {},
-    "responseParameters": [
-    "string"
-    ],
-    "parameters": {
-      "command": "string"
-    }
-  }
-      </pre>
-    </div>
     
   </script>
 
@@ -108,8 +84,7 @@
                 apiv: { value: ''},
                 qmgr: { value: '', required: true},
                 contentType: { value: ''},
-                mqtoken: { value: ''},
-                body: { value: '', required: true}
+                mqtoken: { value: ''}
             },
             credentials: {
             },
