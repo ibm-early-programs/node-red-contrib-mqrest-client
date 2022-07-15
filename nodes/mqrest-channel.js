@@ -35,14 +35,17 @@
       return Promise.resolve(msg);
     }
   
-    function retreiveDetails(user, server, config) {
+    function retreiveDetails(user, server, config, msg) {
       return new Promise(function resolver(resolve, reject) {
-        // console.log('Configuration looks like ', config);
         // console.log('User information looks like ', user);
-        // console.log(`https://${config.host}:${config.port}/ibmmq/rest/v1/admin/qmgr/${config.qmgr}/channel/${config.chnlName}`);
+        // console.log('Server information looks like ', server);
+        // console.log('Configuration looks like ', config);
+
+        //set default values
+        if(msg.chnlName === undefined) msg.chnlName = '';
 
         axios({
-          url: `https://${server.host}:${server.port}/ibmmq/rest/v1/admin/qmgr/${config.qmgr}/channel/${config.chnlName}`,
+          url: `https://${server.host}:${server.port}/ibmmq/rest/v1/admin/qmgr/${msg.qmgr}/channel/${msg.chnlName}`,
           method: 'GET',
           auth: {
             username: user.username,
@@ -66,6 +69,8 @@
             }
           })
           .catch(function (error) {
+            console.log('ERROR');
+            console.log(`Request was sent to: https://${server.host}:${server.port}/ibmmq/rest/v1/admin/qmgr/${msg.qmgr}/channel/${msg.chnlName}`)
             if (error.response) {
               console.log(error.response.data);
               // console.log(error.response.status);
@@ -94,7 +99,7 @@
         //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        retreiveDetails(this.user, this.server, config)
+        retreiveDetails(this.user, this.server, config, msg)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
             return processResponseData(msg, data);

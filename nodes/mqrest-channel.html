@@ -32,20 +32,19 @@
     </select>
   </div>
 
-  <div class="form-row">
-      <label for="node-input-qmgr"><i class="fa fa-tag"></i> MQ QMGR</label>
-      <input type="text" id="node-input-qmgr" placeholder="<qmgr>">
-      </select>
-  </div>
-
-  <div class="form-row">
-      <label for="node-input-chnlName"><i class="fa fa-tag"></i> Channel Name</label>
-      <input type="text" id="node-input-chnlName" placeholder="<channel>">
-      </select>
-  </div>
-
   <div class="form-tips">
     <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
+    <br>
+    <span>This node allows the following parameters via an inject node:</span>
+    <br>
+    <b>Required:</b>
+    <ul>
+      <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+    </ul>
+    Optional:
+    <ul>
+      <li><b>msg.chnlName</b> : The name of a channel.</li>
+    </ul>
   </div>
   
 </script>
@@ -72,10 +71,8 @@
       category: 'output',
       defaults: {
         name: { value: '' },
-        server: { value: "", type: "server-config", required:true },
-        qmgr: { value: '', required: true },
-        chnlName: { value: null },
-        user: { value: "", type: "user-config", required:true }
+        user: { value: "", type: "user-config", required:true },
+        server: { value: "", type: "server-config", required:true }
       },
       credentials: {
       },
