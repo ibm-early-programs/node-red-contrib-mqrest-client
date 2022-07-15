@@ -41,10 +41,8 @@
         // console.log('Server information looks like ', server);
         // console.log('Configuration looks like ', config);
 
-        if(config.apiv === undefined || config.apiv === ''){ //default to version 1 API
-          config.apiv = 1;
-        }
-
+        //set default values
+        if(config.apiv === undefined || config.apiv === '') config.apiv = 1;
         if(msg.installName === undefined) msg.installName = '';
   
         axios({
@@ -73,7 +71,8 @@
             }
           })
           .catch(function (error) {
-            console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/installation/${msg.installName}`);
+            console.log('ERROR');
+            console.log(`Request was sent to: https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/installation/${msg.installName}`);
             if (error.response) {
               console.log(error.response.data);
               // console.log(error.response.status);
