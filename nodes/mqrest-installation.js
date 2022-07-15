@@ -42,7 +42,6 @@
         // console.log('Configuration looks like ', config);
 
         //set default values
-        if(config.apiv === undefined || config.apiv === '') config.apiv = 1;
         if(msg.installName === undefined) msg.installName = '';
   
         axios({
