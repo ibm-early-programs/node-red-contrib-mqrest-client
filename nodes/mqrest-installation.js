@@ -35,18 +35,20 @@
       return Promise.resolve(msg);
     }
   
-    function retreiveDetails(user, server, config) {
+    function retreiveDetails(user, server, config, msg) {
       return new Promise(function resolver(resolve, reject) {
         // console.log('User information looks like ', user);
         // console.log('Server information looks like ', server);
         // console.log('Configuration looks like ', config);
 
-        if(config.apiv === ''){
+        if(config.apiv === undefined || config.apiv === ''){ //default to version 1 API
           config.apiv = 1;
         }
+
+        if(msg.installName === undefined) msg.installName = '';
   
         axios({
-          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/installation/${config.installName}`,
+          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/installation/${msg.installName}`,
           method: 'GET',
           auth: {
             username: user.username,
@@ -71,7 +73,7 @@
             }
           })
           .catch(function (error) {
-            console.log(`https://${server.host}:${server.port}/ibmmq/rest/v${config.version}/admin/installation/${config.installName}`);
+            console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/installation/${msg.installName}`);
             if (error.response) {
               console.log(error.response.data);
               // console.log(error.response.status);
@@ -100,7 +102,7 @@
         //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        retreiveDetails(this.user, this.server, config)
+        retreiveDetails(this.user, this.server, config, msg)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
             return processResponseData(msg, data);
