@@ -27,8 +27,7 @@
     
     <div class="form-row">
         <label for="node-input-server"
-        ><i class="fa fa-folder-close"></i>Server</label
-        >
+        ><i class="fa fa-folder-close"></i>Server</label>
         <select id="node-input-server" style="width:68%"></select>
     </div>
     
@@ -41,116 +40,88 @@
             <option value="PATCH">PATCH</option>
         </select>
     </div>
-    
-    <div class="form-row">
-        <label for="node-input-qmgrName"> QMGR</label>
-        <input type="text" id="node-input-qmgrName" placeholder="qmgrName" />
-    </div>
 
     <div class="form-row">
         <label for="node-input-apiv"><i class="fa fa-folder-close"></i>API Version</label>
-        <select type="text" id="node-input-apiv" style="width:68%">
-            <option value="v1">1</option>
-        </select>
+        <input type="text" id="node-input-apiv">
     </div>
-    
-    <div id="node-row-qName" class="form-row hidden">
-      <label for="node-input-qName"> qName</label>
-      <input type="text" id="node-input-qName">
-    </div>
-    
-    <div id="node-row-keepAuthorityRecords" class="form-row hidden">
-      <label for="node-input-keepAuthorityRecords"><i class="fa fa-folder-close"></i>Keep Authority Records</label>
-      <select type="text" id="node-input-keepAuthorityRecords" style="width:68%">
-        <option value="True">True</option>
-        <option value="False">False</option>
-      </select>
-    </div>
-    
-    <div id="node-row-purge" class="form-row hidden">
-      <label for="node-input-purge"><i class="fa fa-folder-close"></i>Purge</label>
-      <select type="text" id="node-input-purge" style="width:68%">
-        <option value="True">True</option>
-        <option value="False">False</option>
-      </select>
-    </div>
-    
-  <div id="node-row-qType" class="form-row hidden">
-    <label for="node-input-qType"> Type</label>
-    <input type="text" id="node-input-qType" placeholder="type" />
-  </div>
-
-  <div id="node-row-wildQname" class="form-row hidden">
-    <label for="node-input-wildQname"> Queue Name</label>
-    <input type="text" id="node-input-wildQname" placeholder="queue name" />
-  </div>
-
-  <div id="node-row-attributes" class="form-row hidden">
-    <label for="node-input-attributes"> Attributes</label>
-    <input type="text" id="node-input-attributes" placeholder="attributes"/>
-  </div>
-
-  <div id="node-row-status" class="form-row hidden">
-    <label for="node-input-status"> Status</label>
-    <input type="text" id="node-input-status" placeholder="status" />
-  </div>
-
-  <div id="node-row-appHandle" class="form-row hidden">
-    <label for="node-input-appHandle"> App Handle</label>
-    <input type="text" id="node-input-appHandle" placeholder="application handle" />
-  </div>
-
-  <div id="node-row-filter" class="form-row hidden">
-    <label for="node-input-filter"> Filter</label>
-    <input type="text" id="node-input-filter" placeholder="filter" />
-  </div>
-
-  <div id="node-row-like" class="form-row hidden">
-    <label for="node-input-like"> Like</label>
-    <input type="text" id="node-input-like" placeholder="Like" />
-  </div>
-  
-    <div id="node-row-noReplace" class="form-row hidden">
-      <label for="node-input-noReplace"><i class="fa fa-folder-close"></i>noReplace</label>
-      <select type="text" id="node-input-noReplace" style="width:68%">
-        <option value="True">True</option>
-        <option value="False">False</option>
-      </select>
+    <div class="form-tips">
+      <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
     </div>
 
-  <div id="node-row-cmdScope" class="form-row hidden">
-    <label for="node-input-cmdScope"> Cmd Scope</label>
-    <input type="text" id="node-input-cmdScope" placeholder="commandScope" />
-  </div>
+    <br>
 
-  <div id="node-row-qsgd" class="form-row hidden">
-    <label for="node-input-qsgd"> QSGD</label>
-    <input type="text" id="node-input-qsgd" placeholder="Queue Sharing Group Dispositon" />
-  </div>
+    <div class="form-tips hidden" id="node-row-get-tips">
+      <span>This node requires the following parameter via an inject node:</span>
+      <br>
+      <ul>
+        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+      </ul>
+      It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
+      <ul>
+        <li><b>msg.type</b> : </li>
+        <li><b>msg.name</b> : </li>
+        <li><b>msg.attributes</b> : </li>
+        <li><b>msg.status</b> : </li>
+        <li><b>msg.appHandle</b> : </li>
+        <li><b>msg.filter</b> : </li>
+        <li><b>msg.cmdScope</b> : </li>
+        <li><b>msg.qsgd</b> : </li>
+        <li><b>msg.gatewayQMGR</b> : </li>
+      </ul>
+    </div>
 
-  <div id="node-row-body" class="form-row hidden">
-    <label for="node-input-body"> Body</label>
-    <input type="text" id="node-input-body">
-  </div>
+    <div class="form-tips hidden" id="node-row-post-tips">
+      <span>This node requires the following parameter via an inject node:</span>
+      <br>
+      <ul>
+        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+      </ul>
+      It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
+      <ul>
+        <li><b>msg.like</b> : </li>
+        <li><b>msg.noReplace</b> : </li>
+        <li><b>msg.cmdScope</b> : </li>
+        <li><b>msg.payload</b> : </li>
+        <li><b>msg.csrf</b> : </li>
+        <li><b>msg.gatewayQMGR</b> : </li>
+      </ul>
+    </div>
 
-  <div id="node-row-csrf" class="form-row hidden">
-    <label for="node-input-csrf"><i class="fa fa-tag"></i> CSRF</label>
-    <input type="text" id="node-input-csrf" placeholder="csrf" />
-  </div>
+    <div class="form-tips hidden" id="node-row-delete-tips">
+      <span>This node requires the following parameter via an inject node:</span>
+      <br>
+      <ul>
+        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.qname</b> : </li>
+      </ul>
+      It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
+      <ul>
+        <li><b>msg.keepAuthorityRecords</b> : </li>
+        <li><b>msg.purge</b> : </li>
+        <li><b>msg.cmdScope</b> : </li>
+        <li><b>msg.qsgd</b> : </li>
+        <li><b>msg.csrf</b> : </li>
+        <li><b>msg.gatewayQMGR</b> : </li>
+      </ul>
+    </div>
 
-  <div id="node-row-gatewayQmgr" class="form-row hidden">
-    <label for="node-input-gatewayQmgr"><i class="fa fa-tag"></i> Gateway QMGR</label>
-    <input type="text" id="node-input-gatewayQmgr" placeholder="gateway qmgr" />
-  </div>
-
-  <div id="node-row-force" class="form-row hidden">
-    <label for="node-input-force"><i class="fa fa-folder-close"></i>force</label>
-    <select type="text" id="node-input-force" style="width:68%">
-      <option value="True">True</option>
-      <option value="False">False</option>
-    </select>
-  </div>
-
+    <div class="form-tips hidden" id="node-row-patch-tips">
+      <span>This node requires the following parameter via an inject node:</span>
+      <br>
+      <ul>
+        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.qname</b> : </li>
+      </ul>
+      It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
+      <ul>
+        <li><b>msg.force</b> : </li>
+        <li><b>msg.cmdScope</b> : </li>
+        <li><b>msg.payload</b> : </li>
+        <li><b>msg.csrf</b> : </li>
+        <li><b>msg.gatwayQMGR</b> : </li>
+      </ul>
+    </div>
 
 
 </script>
@@ -180,26 +151,8 @@
                 name: { value: "" },
                 user: { value: "", type: "user-config", required: true },
                 server: { value: "", type: "server-config", required: true },
-                operation: { value: "GET" },
-                qmgrName: { value: '', required: true },
                 apiv: { value: '', required: true },
-                qType: { value: '' },
-                wildQname: { value: '' },
-                attributes: { value: '' },
-                status: { value: '' },
-                appHandle: { value: '' },
-                filter: { value: '' },
-                cmdScope: { value: '' },
-                qsgd: { value: '' },
-                gatewayQmgr: { value: '' },
-                like: { value: '' },
-                noReplace: { value: '' },
-                body: { value: '' },
-                csrf: { value: '' },
-                keepAuthorityRecords: { value: '' },
-                qName: { value: ''},
-                force: { value: ''},
-
+                operation: { value: "GET" }
             },
             credentials: {},
             color: "#C7E9C0",
@@ -214,111 +167,51 @@
                 return this.name;
             },
             oneditprepare: function () {
-                var updateOptions = function () {
-                    console.log($("#node-input-operation").val())
-                    switch ($("#node-input-operation").val()) {
-                        case "GET":
-                            $("#node-row-like").hide();
-                            $("#node-row-noReplace").hide();
-                            $("#node-row-body").hide();
-                            $("#node-row-csrf").hide();
+              $("#node-input-apiv").typedInput({
+                types: [
+                  {
+                    value: "version",
+                    options: [
+                      { value: "v1", label: "1" }
+                    ]
+                  }
+                ]
+              });
+              var updateOptions = function () {
+                switch ($("#node-input-operation").val()) {
+                  case "GET":
+                    $("#node-row-patch-tips").hide();
+                    $("#node-row-delete-tips").hide();
+                    $("#node-row-post-tips").hide();
+                    $("#node-row-get-tips").show();
+                    break;
 
-                            $("#node-row-qType").show();
-                            $("#node-row-wildQname").show();
-                            $("#node-row-attributes").show();
-                            $("#node-row-status").show();
-                            $("#node-row-appHandle").show();
-                            $("#node-row-filter").show();
-                            $("#node-row-cmdScope").show();
-                            $("#node-row-qsgd").show();
-                            $("#node-row-gatwayQmgr").show();
-                            break;
+                  case "POST":
+                    $("#node-row-patch-tips").hide();
+                    $("#node-row-delete-tips").hide();
+                    $("#node-row-post-tips").show();
+                    $("#node-row-get-tips").hide();
+                    break;
 
-                        case "POST":
-                            $("#node-row-qType").hide();
-                            $("#node-row-wildQname").hide();
-                            $("#node-row-attributes").hide();
-                            $("#node-row-status").hide();
-                            $("#node-row-appHandle").hide();
-                            $("#node-row-filter").hide();
-                            $("#node-row-qsgd").hide();
-                            $("#node-row-qName").hide();
-                            $("#node-row-keepAuthorityRecords").hide();
-                            $("#node-row-purge").hide();
-                            $("#node-row-force").hide();
+                  case "DELETE":
+                    $("#node-row-patch-tips").hide();
+                    $("#node-row-delete-tips").show();
+                    $("#node-row-post-tips").hide();
+                    $("#node-row-get-tips").hide();
+                    break;
 
-                            $("#node-row-like").show();
-                            $("#node-row-noReplace").show();
-                            $("#node-row-cmdScope").show();
-                            $("#node-row-body").show();
-                            $("#node-row-csrf").show();
-                            $("#node-row-gatwayQmgr").show();
-                            break;
-
-                        case "DELETE":
-                            $("#node-row-qType").hide();
-                            $("#node-row-wildQname").hide();
-                            $("#node-row-attributes").hide();
-                            $("#node-row-status").hide();
-                            $("#node-row-appHandle").hide();
-                            $("#node-row-filter").hide();
-                            $("#node-row-like").hide();
-                            $("#node-row-noReplace").hide();
-                            $("#node-row-body").hide();
-                            $("#node-row-force").hide();
-
-                            $("#node-row-qName").show();
-                            $("#node-row-keepAuthorityRecords").show();
-                            $("#node-row-purge").show();
-                            $("#node-row-cmdScope").show();
-                            $("#node-row-qsgd").show();
-                            $("#node-row-csrf").show();
-                            $("#node-row-gatwayQmgr").show();
-                            break;
-
-                        case "PATCH":
-                            $("#node-row-qType").hide();
-                            $("#node-row-wildQname").hide();
-                            $("#node-row-attributes").hide();
-                            $("#node-row-status").hide();
-                            $("#node-row-appHandle").hide();
-                            $("#node-row-filter").hide();
-                            $("#node-row-like").hide();
-                            $("#node-row-noReplace").hide();
-                            $("#node-row-keepAuthorityRecords").hide();
-                            $("#node-row-purge").hide();
-                            $("#node-row-qsgd").hide();
-                            
-                            $("#node-row-qName").show();
-                            $("#node-row-force").show();
-                            $("#node-row-cmdScope").show();
-                            $("#node-row-body").show();
-                            $("#node-row-csrf").show();
-                            $("#node-row-gatwayQmgr").show();
+                  case "PATCH":
+                    $("#node-row-patch-tips").show();
+                    $("#node-row-delete-tips").hide();
+                    $("#node-row-post-tips").hide();
+                    $("#node-row-get-tips").hide();
+                    break;
+                }
 
 
-                    }
-                };
-                updateOptions();
-                $("#node-input-operation").change(updateOptions);
-                $("#node-input-body").typedInput({
-                    type: "json",
-                    types: ["json"]
-                });
-                this.editor = RED.editor.createEditor({
-                    id: 'node-input-body',
-                    mode: 'ace/mode/text',
-                    value: this.command
-                });
-            },
-            oneditsave: function () {
-                this.command = this.editor.getValue();
-                this.editor.destroy();
-                delete this.editor;
-            },
-            oneditcancel: function () {
-                this.editor.destroy();
-                delete this.editor;
+              }
+              updateOptions();
+              $("#node-input-operation").change(updateOptions);
             },
         });
     })();

@@ -14,8 +14,6 @@
  * limitations under the License.
  **/
 
-const { patch } = require("request");
-
 module.exports = function (RED) {
     const https = require("https");
     const axios = require("axios");
@@ -35,33 +33,42 @@ module.exports = function (RED) {
         return Promise.resolve(msg);
       }
 
-    function request(user, server, config) {
+    function request(user, server, config, msg) {
+        // console.log('User looks like ', user);
+        // console.log('Server looks like ', server);
         // console.log('Configuration looks like ', config);
-        // console.log('User information looks like ', user);
-        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${config.qmgrName}/queue/${config.qName}`);
+
+        // setting default variables
+        if(msg.csrf === undefined) msg.csrf = '';
 
         switch (config.operation) {
             case "GET":
-                return get(user, server, config);
+                return get(user, server, config, msg);
 
             case "POST":
-                return pst(user, server, config);
+                return pst(user, server, config, msg);
 
             case "DELETE":
-                return dlt(user, server, config);
+                return dlt(user, server, config, msg);
 
             case "PATCH":
-                return ptch(user, server, config);
+                return ptch(user, server, config, msg);
 
         }
 
     }
 
 
-    function get(user, server, config) {
+    function get(user, server, config, msg) {
+        // setting default variables
+        if(msg.qname === undefined) msg.qname = '';
+
+        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue/${msg.qname}`);
+
+
         return new Promise(function resolver(resolve, reject) {
             axios({
-                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${config.qmgrName}/queue`,
+                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue/${msg.qname}`,
                 method: config.operation,
                 auth: {
                     username: user.username,
@@ -84,8 +91,8 @@ module.exports = function (RED) {
                 .catch(function (error) {
                     if (error.response) {
                         console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
+                        // console.log(error.response.status);
+                        // console.log(error.response.headers);
                     } else if (error.request) {
                         console.log(error.request);
                     } else {
@@ -97,23 +104,29 @@ module.exports = function (RED) {
         });
     }
 
-    function pst(user, server, config) {
+    function pst(user, server, config, msg) {
+        
         return new Promise(function resolver(resolve, reject) {
             axios({
-                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${config.qmgrName}/queue`,
+                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue`,
                 method: config.operation,
                 auth: {
                     username: user.username,
                     password: user.password,
                 },
+                headers: {
+                    'ibm-mq-rest-csrf-token': msg.csrf,
+                    'Content-Type': "application/json"
+                },
+                data: msg.payload,
                 rejectUnauthorized: false,
                 httpsAgent: new https.Agent({ rejectUnauthorized: false }),
             })
                 .then(function (response) {
+                    console.log(response.status);
                     switch (response.status) {
-                        case 200:
                         case 201:
-                            resolve(response.data);
+                            resolve({"status": `${response.status}`});
                             break;
                         default:
                             reject("Error invoking API " + response.status);
@@ -124,8 +137,8 @@ module.exports = function (RED) {
                 .catch(function (error) {
                     if (error.response) {
                         console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
+                        // console.log(error.response.status);
+                        // console.log(error.response.headers);
                     } else if (error.request) {
                         console.log(error.request);
                     } else {
@@ -137,14 +150,18 @@ module.exports = function (RED) {
         });
     }
 
-    function dlt(user, server, config) {
+    function dlt(user, server, config, msg) {
         return new Promise(function resolver(resolve, reject) {
             axios({
-                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${config.qmgrName}/queue/${config.qName}`,
+                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue/${msg.qname}`,
                 method: config.operation,
                 auth: {
                     username: user.username,
                     password: user.password,
+                },
+                headers: {
+                    'ibm-mq-rest-csrf-token': msg.csrf,
+                    'Content-Type': "application/json"
                 },
                 rejectUnauthorized: false,
                 httpsAgent: new https.Agent({ rejectUnauthorized: false }),
@@ -152,7 +169,7 @@ module.exports = function (RED) {
                 .then(function (response) {
                     switch (response.status) {
                         case 204:
-                            resolve(response.data);
+                            resolve({"status":`${response.status}`});
                             break;
                         default:
                             reject("Error invoking API " + response.status);
@@ -163,8 +180,8 @@ module.exports = function (RED) {
                 .catch(function (error) {
                     if (error.response) {
                         console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
+                        // console.log(error.response.status);
+                        // console.log(error.response.headers);
                     } else if (error.request) {
                         console.log(error.request);
                     } else {
@@ -176,22 +193,27 @@ module.exports = function (RED) {
         });
     }
 
-    function ptch(user, server, config){
+    function ptch(user, server, config, msg){
         return new Promise(function resolver(resolve, reject) {
             axios({
-                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${config.qmgrName}/queue/${config.qName}`,
+                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue/${msg.qname}`,
                 method: config.operation,
                 auth: {
                     username: user.username,
                     password: user.password,
                 },
+                headers: {
+                    'ibm-mq-rest-csrf-token': msg.csrf,
+                    'Content-Type': "application/json"
+                },
+                data: msg.payload,
                 rejectUnauthorized: false,
                 httpsAgent: new https.Agent({ rejectUnauthorized: false }),
             })
             .then(function (response) {
                 switch (response.status) {
                     case 204:
-                        resolve(response.data);
+                        resolve({"status": `${response.status}`});
                         break;
                     default:
                         reject("Error invoking API " + response.status);
@@ -202,8 +224,8 @@ module.exports = function (RED) {
             .catch(function (error) {
                 if (error.response) {
                     console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
+                    // console.log(error.response.status);
+                    // console.log(error.response.headers);
                 } else if (error.request) {
                     console.log(error.request);
                 } else {
@@ -226,7 +248,7 @@ module.exports = function (RED) {
 
 
         this.on("input", function (msg) {
-            request(this.user, this.server, config)
+            request(this.user, this.server, config, msg)
                 .then((data) => {
                     return processResponseData(msg, data);
                 })
