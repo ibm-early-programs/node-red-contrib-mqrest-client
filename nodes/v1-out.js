@@ -41,26 +41,29 @@ module.exports = function (RED) {
     }
   }
 
-  function postToQueue(config, user, contentType, data) {
+  function postToQueue(user, server, config, msg) {
     return new Promise(function resolver(resolve, reject) {
-      // console.log('Configuration looks like ', config);
-      // console.log(`https://${config.host}:${config.port}/ibmmq/rest/v${config.apiv}/messaging/qmgr/${config.qmgr}/queue/${config.qname}/message`,)
+      console.log('User information looks like ', user);
+      console.log('Server information looks like', server);
+      console.log('Configuration looks like ', config);
+      console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/messaging/qmgr/${msg.qmgr}/queue/${msg.qname}/message`,)
+
+      //set default values
+      if (msg.csrf === undefined) msg.csrf = '';
 
       axios({
-        url: `https://${config.host}:${config.port}/ibmmq/rest/v${config.apiv}/messaging/qmgr/${config.qmgr}/queue/${config.qname}/message`,
+        url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/messaging/qmgr/${msg.qmgr}/queue/${msg.qname}/message`,
         method: 'POST',
         auth: {
           username: user.username,
           password: user.password,
         },
         headers: {
-          'ibm-mq-rest-csrf-token': config.token,
-          'Content-Type': contentType
+          'ibm-mq-rest-csrf-token': msg.csrf,
+          'Content-Type': config.contentType
         },
+        data: msg.payload,
         rejectUnauthorized: false,
-        //requestCert: true,
-        //agent: false,
-        data: data,
         httpsAgent: new https.Agent({ rejectUnauthorized: false })
       })
         .then(function (response) {
@@ -98,7 +101,7 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
 
     this.user = RED.nodes.getNode(config.user);
-    this.msgconfig = RED.nodes.getNode(config.msgconfig);
+    this.server = RED.nodes.getNode(config.server);
 
     this.on('input', function (msg) {
       //var message = '';
@@ -106,7 +109,7 @@ module.exports = function (RED) {
 
       verifyPayload(msg, config)
         .then((data) => {
-          return postToQueue(this.msgconfig, this.user, config.contentType, data);
+          return postToQueue(this.user, this.server, config, msg);
         })
         .then(function (msg) {
           node.status({ fill: 'blue', shape: 'dot', text: 'payload posted onto queue' });

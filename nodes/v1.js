@@ -35,27 +35,30 @@ module.exports = function (RED) {
     return Promise.resolve(msg);
   }
 
-  function readFromQueue(user, config, op) {
+  function readFromQueue(user, server, config, msg) {
     return new Promise(function resolver(resolve, reject) {
-      // console.log('User config looks like ', user);
-      // console.log('Connection information looks like ', config);
+      // console.log('User looks like ', user);
+      // console.log('Server looks like, server);
+      // console.log('Connection looks like ', config);
+
+      //set default values
+      if(msg.csrf === undefined) msg.csrf = '';
 
       axios({
-        url: `https://${config.host}:${config.port}/ibmmq/rest/v${config.apiv}/messaging/qmgr/${config.qmgr}/queue/${config.qname}/message`,
-        method: op,
+        url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/messaging/qmgr/${msg.qmgr}/queue/${msg.qname}/message`,
+        method: config.op,
         auth: {
           username: user.username,
           password: user.password,
         },
         headers: {
-          'ibm-mq-rest-csrf-token': config.token,
+          'ibm-mq-rest-csrf-token': msg.csrf,
           'Accept': 'text/plain'
         },
         rejectUnauthorized: false,
         httpsAgent: new https.Agent({ rejectUnauthorized: false })
       })
         .then(function (response) {
-
           switch (response.status) {
             case 200:
             case 201:
@@ -71,15 +74,15 @@ module.exports = function (RED) {
         })
         .catch(function (error) {
           if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
+            // console.log(error.response.data);
+            // console.log(error.response.status);
             console.log(error.response.headers);
           } else if (error.request) {
             console.log(error.request);
           } else {
             console.log('Error',error.message);
           }
-          console.log("error.config ",error.config);
+          // console.log("error.config ",error.config);
           reject(error);
         });
     });
@@ -93,13 +96,12 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
 
     this.user = RED.nodes.getNode(config.user);
-    this.msgconfig = RED.nodes.getNode(config.msgconfig);
-    this.op = config.op;
+    this.server = RED.nodes.getNode(config.server);
 
     this.on('input', function (msg) {
       node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-      readFromQueue(this.user, this.msgconfig, this.op)
+      readFromQueue(this.user, this.server, config, msg)
         .then((data) => {
           node.status({ fill: 'green', shape: 'dot', text: 'message received' });
           return processResponseData(msg, data);
