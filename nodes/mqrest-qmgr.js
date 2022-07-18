@@ -29,26 +29,23 @@
         }
         catch (e) {
         }
-        msg.payload = b;
-        console.log(b);
+        msg.payload = b;  
       }
   
       return Promise.resolve(msg);
     }
   
-    function retreiveDetails(user, server, config) {
+    function retreiveDetails(user, server, config, msg) {
       return new Promise(function resolver(resolve, reject) {
-
-        if(config.qmgr === null){
-            config.qmgr = '';
-        }
-
         // console.log('Configuration looks like ', config);
         // console.log('User information looks like ', user);
         // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${config.qmgr}`);
+        
+        // set default values
+        if(msg.qmgr === undefined) msg.qmgr = '';
 
         axios({
-          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${config.qmgr}`,
+          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}`,
           method: 'GET',
           auth: {
             username: user.username,
@@ -102,7 +99,7 @@
         //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        retreiveDetails(this.user, this.server, config)
+        retreiveDetails(this.user, this.server, config, msg)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
             return processResponseData(msg, data);

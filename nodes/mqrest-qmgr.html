@@ -36,10 +36,14 @@
       <label for="node-input-apiv"><i class="fa fa-folder-close"></i> API Version</label>
       <input type="text" id="node-input-apiv">
     </div>
-  
-    <div class="form-row">
-      <label for="node-input-qmgr"><i class="fa fa-tag"></i> qmgr</label>
-      <input type="text" id="node-input-qmgr" placeholder="<qmgr>">
+
+    <div class="form-tips">
+      <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
+      <br>
+      <span>This node allows the following parameters via an inject node:</span>
+      <ul>
+        <li><b>msg.qmgr</b> : The name of the queue manager to retieve details for.</li>
+      </ul>
     </div>
   
 </script>
