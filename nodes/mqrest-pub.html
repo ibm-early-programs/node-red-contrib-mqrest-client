@@ -27,8 +27,14 @@
     </div>
 
     <div class="form-row">
-      <label for="node-input-msgconfig"><i class="fa fa-folder-close"></i> Message config</label>
-      <select id="node-input-msgconfig" style="width:68%;">
+      <label for="node-input-server"><i class="fa fa-folder-close"></i> Server</label>
+      <select id="node-input-server" style="width:68%;">
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label for="node-input-apiv"><i class="fa fa-folder-close"></i> API Version</label>
+      <input type="text" id="node-input-apiv">
       </select>
     </div>
   
@@ -39,6 +45,22 @@
         <option value="application/json">application/json</option>
       </select>
     </div>
+
+    <div class="form-tips">
+      <span>This node supports the following parameters via an inject node:</span>
+      <br>
+      <b>Required:</b>
+      <ul>
+        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager.</li>
+        <li><b>msg.topicString</b> : The name of the Topic to publish to.</li>
+        <li><b>msg.payload</b> : The message to publish.</li>
+      </ul>
+      Optional:
+      <ul>
+        <li><b>msg.csrf</b> : The The CSRF protection header. </li>
+      </ul>
+    </div>
+
   </script>
 
   <script type="text/html" data-help-name="mqrest-pub">
@@ -66,9 +88,10 @@
         category: 'output',
         defaults: {
           name: { value: '' },
-          contentType: { value: '' },
-          user: { value: "", type:"user-config"},
-          msgconfig: { value:"", type:"msg-config" }
+          user: { value: "", type:"user-config", required: true},
+          server: { value:"", type:"server-config", required: true },
+          apiv: { value: '', required: true},
+          contentType: { value: '' }
         },
         credentials: {
         },
@@ -82,6 +105,18 @@
         },
         labelStyle: function() {
           return this.name ? 'node_label_italic node_label_black' : 'node_label_black';
+        },
+        oneditprepare: function () {
+          $("#node-input-apiv").typedInput({
+            types: [
+              {
+                value: "version",
+                options: [
+                  { value: "v2", label: "2"}
+                ]
+              }
+            ]
+          })
         }
       });
     })();

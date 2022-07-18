@@ -41,25 +41,29 @@ module.exports = function (RED) {
     }
   }
 
-  function publishToTopic(config, user, contentType, data) {
+  function publishToTopic(user, server, config, msg) {
     return new Promise(function resolver(resolve, reject) {
+      // console.log('User looks like ', user);
+      // console.log('Server looks like ', server);
       // console.log('Configuration looks like ', config);
-      // console.log('User information looks like ', user);
-      // console.log(`https://${config.host}:${config.port}/ibmmq/rest/v${config.apiv}/messaging/qmgr/${config.qmgr}/topic/${config.topic}/message`);
+      console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/messaging/qmgr/${msg.qmgr}/topic/${msg.topicString}/message`);
+
+      // set default values
+      if(msg.csrf === undefined) msg.csrf = '';
  
       axios({
-        url: `https://${config.host}:${config.port}/ibmmq/rest/v${config.apiv}/messaging/qmgr/${config.qmgr}/topic/${config.topic}/message`,
+        url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/messaging/qmgr/${msg.qmgr}/topic/${msg.topicString}/message`,
         method: 'POST',
         auth: {
           username: user.username,
           password: user.password,
         },
         headers: {
-          'ibm-mq-rest-csrf-token': config.token,
-          'Content-Type': contentType
+          'ibm-mq-rest-csrf-token': msg.csrf,
+          'Content-Type': config.contentType
         },
         rejectUnauthorized: false,
-        data: data,
+        data: msg.payload,
         httpsAgent: new https.Agent({ rejectUnauthorized: false })
       })
         .then(function (response) {
@@ -76,8 +80,8 @@ module.exports = function (RED) {
         .catch(function (error) {
           if (error.response) {
             console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            // console.log(error.response.status);
+            // console.log(error.response.headers);
           } else if (error.request) {
             console.log(error.request);
           } else {
@@ -95,14 +99,14 @@ module.exports = function (RED) {
     RED.nodes.createNode(this, config);
 
     this.user = RED.nodes.getNode(config.user);
-    this.msgconfig = RED.nodes.getNode(config.msgconfig);
+    this.server = RED.nodes.getNode(config.server);
 
     this.on('input', function (msg) {
       node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
       verifyPayload(msg, config)
         .then((data) => {
-          return publishToTopic(this.msgconfig, this.user, config.contentType, data);
+          return publishToTopic(this.user, this.server, config, msg);
         })
         .then(function (msg) {
           node.status({ fill: 'blue', shape: 'dot', text: 'payload published to topic' });
