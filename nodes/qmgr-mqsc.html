@@ -37,22 +37,14 @@
       <input type="text" id="node-input-apiv">
     </div>
 
-    <div class="form-row">
-      <label for="node-input-qmgr"><i class="fa fa-tag"></i> QMGR name</label>
-      <input type="text" id="node-input-qmgr" placeholder="<qmgrName>">
-    </div>
-    
-    <div class="form-row">
-      <label for="node-input-contentType"><i class="fa fa-book"></i> Content Type: </label>
-      <select type="text" id="node-input-contentType" style="display: inline-block; width: 70%;">
-        <option value="text/plain;charset=utf-8">text/plain;charset=utf-8</option>
-        <option value="application/json">application/json</option>
-      </select>
-    </div>
-    
-    <div class="form-row">
-      <label for="node-input-mqtoken"><i class="fa fa-bookmark"></i> MQ REST CSRF Token</label>
-      <input type="text" id="node-input-mqtoken" placeholder="blank">
+    <div class="form-tips">
+      <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
+      <br>
+      <span>This node requires the following parameters via an inject node:</span>
+      <ul>
+        <li><b>msg.qmgr</b> : The name the queue manager to run the MQSC command on.</li>
+        <li><b>msg.payload</b> : The command to be run on the QM.</li>
+      </ul>
     </div>
     
   </script>
@@ -81,10 +73,7 @@
                 name: { value: '' },
                 user: { value: "", type: "user-config" },
                 server: { value: "", type: "server-config"},
-                apiv: { value: ''},
-                qmgr: { value: '', required: true},
-                contentType: { value: ''},
-                mqtoken: { value: ''}
+                apiv: { value: ''}
             },
             credentials: {
             },
@@ -111,25 +100,7 @@
                   }
                 ]
               });
-              $("#node-input-body").typedInput({
-                type: "json",
-                types:["json"]
-              });
-              this.editor = RED.editor.createEditor({
-                id: 'node-input-body',
-                mode: 'ace/mode/text',
-                value: this.command
-              });
-            },
-            oneditsave: function(){
-                this.command = this.editor.getValue();
-                this.editor.destroy();
-                delete this.editor;
-            },
-            oneditcancel: function(){
-                this.editor.destroy();
-                delete this.editor;
-            },
+            }
         });
     })();
 </script>

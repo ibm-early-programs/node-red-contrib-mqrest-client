@@ -29,8 +29,8 @@
         }
         catch (e) {
         }
+
         msg.payload = b;
-        console.log(b);
       }
   
       return Promise.resolve(msg);
@@ -39,28 +39,33 @@
     function runCommand(user, server, config, msg) {
       return new Promise(function resolver(resolve, reject) {
 
-        // console.log('Configuration looks like ', config);
         // console.log('User information looks like ', user);
+        // console.log('Server looks like' , server);
+        // console.log('Configuration looks like ', config);
         // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${config.qmgr}/mqsc`);
 
+        //set default values
+        if(msg.csrf === undefined) msg.csrf = '';
+
+        //add command to JSON string
+        msg.payload = {"type": "runCommand", "parameters": { "command": `${msg.payload}`}};
+
         axios({
-          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${config.qmgr}/mqsc`,
+          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${msg.qmgr}/mqsc`,
           method: 'POST',
           auth: {
             username: user.username,
             password: user.password,
           },
           headers: {
-            'ibm-mq-rest-csrf-token': config.mqtoken,
-            'Content-Type': config.contentType
+            'ibm-mq-rest-csrf-token': msg.csrf,
+            'Content-Type': "application/json"
           },
           data: msg.payload,
           rejectUnauthorized: false,
           httpsAgent: new https.Agent({ rejectUnauthorized: false })
         })
           .then(function (response) {
-            console.log(response);
-            console.log(typeof response.data);
             switch (response.status) {
               case 200:
               case 201:
