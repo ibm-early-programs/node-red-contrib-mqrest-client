@@ -37,9 +37,13 @@
     <input type="text" id="node-input-apiv">
   </div>
 
-  <div class="form-row">
-    <label for="node-input-tid"><i class="fa fa-tag"></i> Transfer ID</label>
-    <input type="text" id="node-input-tid" placeholder="<id>">
+  <div class="form-tips">
+    <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
+    <br>
+    <span>This node allows the following parameters via an inject node:</span>
+    <ul>
+      <li><b>msg.id</b> : The id of the transfer to retieve details for.</li>
+    </ul>
   </div>
 
 </script>
@@ -47,9 +51,6 @@
 <script type="text/html" data-help-name="mft-transfer-retrieve">
   <p>This node makes use of the MQ REST API to retrieve details of transfers from the Queue Manager. </p>
 
-  <p>
-    Use the configuration to specify node parameters.
-  </p>
   <p>Specify the expected content type in the configuration. The node will check that
   the contents of <code>msg.payload</code> matches the specified type.</p>
 </script>
@@ -72,8 +73,7 @@
                 name: { value: '' },
                 user: { value: "", type: "user-config" },
                 server: { value: "", type: "server-config"},
-                tid: { value: null},
-                apiv: { value: ''}
+                apiv: { value: 'v2'}
             },
             credentials: {
             },

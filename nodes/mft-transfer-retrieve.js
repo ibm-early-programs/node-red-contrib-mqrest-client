@@ -19,36 +19,18 @@
     const axios = require('axios');
     const Utils = require('./mqrest-utils');
   
-    function processResponseData(msg, data) {
-      if ('object' !== typeof data) {
-        return Promise.reject('Unexpected type data ' + typeof data);
-      } else {
-        let b = data;
-        try {
-          b = JSON.parse(data);
-        }
-        catch (e) {
-        }
-        msg.payload = b;
-        console.log(b);
-      }
-  
-      return Promise.resolve(msg);
-    }
-  
-    function retreiveDetails(user, server, config) {
+    function retrieveDetails(user, server, config, msg) {
       return new Promise(function resolver(resolve, reject) {
 
-        if(config.tid === null){
-            config.tid = '';
-        }
+        if(msg.id === null) msg.id = '';
 
-        // console.log('Configuration looks like ', config);
         // console.log('User information looks like ', user);
-        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/transfer/${config.tid}`);
+        // console.log('Server looks like ', server);
+        // console.log('Configuration looks like ', config);
+        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/transfer/${msg.id}`);
 
         axios({
-          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/transfer/${config.tid}`,
+          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/transfer/${msg.id}`,
           method: 'GET',
           auth: {
             username: user.username,
@@ -61,11 +43,8 @@
           httpsAgent: new https.Agent({ rejectUnauthorized: false })
         })
           .then(function (response) {
-            console.log(response);
-            console.log(typeof response.data);
             switch (response.status) {
               case 200:
-              case 201:
                 resolve(response.data);
                 break;
               default:
@@ -102,10 +81,10 @@
         //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        retreiveDetails(this.user, this.server, config)
+        retrieveDetails(this.user, this.server, config, msg)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
-            return processResponseData(msg, data);
+            return utils.processResponseData(msg, data, 'object');
           })
           .then(function (msg) {
             node.status({});
