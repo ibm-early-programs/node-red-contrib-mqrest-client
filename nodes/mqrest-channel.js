@@ -19,25 +19,8 @@
     const axios = require('axios');
     const Utils = require('./mqrest-utils');
   
-    function processResponseData(msg, data) {
-      if ('object' !== typeof data) {
-        return Promise.reject('Unexpected type data ' + typeof data);
-      } else {
-        let b = data;
-        try {
-          b = JSON.parse(data);
-        }
-        catch (e) {
-        }
-        msg.payload = b;
-      }
-  
-      return Promise.resolve(msg);
-    }
-  
-    function retreiveDetails(user, server, config, msg) {
+    function retrieveDetails(user, server, msg) {
       return new Promise(function resolver(resolve, reject) {
-        // console.log('User information looks like ', user);
         // console.log('Server information looks like ', server);
         // console.log('Configuration looks like ', config);
 
@@ -99,10 +82,10 @@
         //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        retreiveDetails(this.user, this.server, config, msg)
+        retrieveDetails(this.user, this.server, msg)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
-            return processResponseData(msg, data);
+            return utils.processResponseData(msg, data, 'object');
           })
           .then(function (msg) {
             node.status({});

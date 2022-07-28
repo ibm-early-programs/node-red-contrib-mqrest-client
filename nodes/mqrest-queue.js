@@ -19,20 +19,6 @@ module.exports = function (RED) {
     const axios = require("axios");
     const Utils = require("./mqrest-utils");
 
-    function processResponseData(msg, data) {
-        if ("object" !== typeof data) {
-          return Promise.reject("Unexpected type data " + typeof data);
-        } else {
-          let b = data;
-          try {
-            b = JSON.parse(data);
-          } catch (e) {}
-          msg.payload = b;
-        }
-    
-        return Promise.resolve(msg);
-      }
-
     function request(user, server, config, msg) {
         // console.log('User looks like ', user);
         // console.log('Server looks like ', server);
@@ -245,12 +231,10 @@ module.exports = function (RED) {
         this.user = RED.nodes.getNode(config.user);
         this.server = RED.nodes.getNode(config.server);
 
-
-
         this.on("input", function (msg) {
             request(this.user, this.server, config, msg)
                 .then((data) => {
-                    return processResponseData(msg, data);
+                    return utils.processResponseData(msg, data, 'object');
                 })
                 .then(function(msg) {
                     node.send(msg);

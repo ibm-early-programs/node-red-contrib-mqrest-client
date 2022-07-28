@@ -19,28 +19,6 @@ module.exports = function (RED) {
   const axios = require('axios');
   const Utils = require('./mqrest-utils');
 
-  function verifyPayload(msg, config) {
-    let error = null;
-    let stringPayload = msg.payload;
-    let type = typeof msg.payload
-    if (!config.contentType || config.contentType.includes('text/plain')) {
-      if ('string' !== type) {
-        error = 'Expecting a string in msg.payload';
-      }
-    } else if (config.contentType.includes('application/json')) {
-      if ('object' !== type) {
-        error = 'Expecting a json object in msg.payload';
-      } else {
-        stringPayload = JSON.stringify(msg.payload);
-      }
-    }
-    if (error) {
-      return Promise.reject(error);
-    } else {
-      return Promise.resolve(stringPayload);
-    }
-  }
-
   function publishToTopic(user, server, config, msg) {
     return new Promise(function resolver(resolve, reject) {
       // console.log('User looks like ', user);
@@ -104,8 +82,9 @@ module.exports = function (RED) {
     this.on('input', function (msg) {
       node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-      verifyPayload(msg, config)
+      utils.verifyPayload(msg, config)
         .then((data) => {
+          msg.payload = data;
           return publishToTopic(this.user, this.server, config, msg);
         })
         .then(function (msg) {

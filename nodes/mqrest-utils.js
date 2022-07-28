@@ -43,6 +43,45 @@ class MQRESTUtils {
     this._node.error(messageTxt, msg);
   }
 
+  processResponseData(msg, data, expectedType) {
+    if (expectedType !== typeof data) {
+      return Promise.reject('Unexpected type data ' + typeof data);
+    } else {
+      let b = data;
+      try {
+        b = JSON.parse(data);
+      }
+      catch (e) {
+      }
+      msg.payload = b;
+      console.log("here", b);
+    }
+
+    return Promise.resolve(msg);
+  }
+
+  verifyPayload(msg, config) {
+    let error = null;
+    let stringPayload = msg.payload;
+    let type = typeof msg.payload
+    if (!config.contentType || config.contentType.includes('text/plain')) {
+      if ('string' !== type) {
+        error = 'Expecting a string in msg.payload';
+      }
+    } else if (config.contentType.includes('application/json')) {
+      if ('object' !== type) {
+        error = 'Expecting a json object in msg.payload';
+      } else {
+        stringPayload = JSON.stringify(msg.payload);
+      }
+    }
+    if (error) {
+      return Promise.reject(error);
+    } else {
+      return Promise.resolve(stringPayload);
+    }
+  }
+
 }
 
 module.exports = MQRESTUtils;
