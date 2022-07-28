@@ -19,37 +19,15 @@
     const axios = require('axios');
     const Utils = require('./mqrest-utils');
   
-    function processResponseData(msg, data) {
-      if ('object' !== typeof data) {
-        return Promise.reject('Unexpected type data ' + typeof data);
-      } else {
-        let b = data;
-        try {
-          b = JSON.parse(data);
-        }
-        catch (e) {
-        }
-
-        msg.payload = b;
-      }
-  
-      return Promise.resolve(msg);
-    }
-  
     function runCommand(user, server, config, msg) {
       return new Promise(function resolver(resolve, reject) {
-
-        // console.log('User information looks like ', user);
         // console.log('Server looks like' , server);
         // console.log('Configuration looks like ', config);
         // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${config.qmgr}/mqsc`);
 
         //set default values
         if(msg.csrf === undefined) msg.csrf = '';
-
-        //add command to JSON string
-        msg.payload = {"type": "runCommand", "parameters": { "command": `${msg.payload}`}};
-
+        
         axios({
           url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${msg.qmgr}/mqsc`,
           method: 'POST',
@@ -59,7 +37,7 @@
           },
           headers: {
             'ibm-mq-rest-csrf-token': msg.csrf,
-            'Content-Type': "application/json"
+            'Content-Type': config.contentType
           },
           data: msg.payload,
           rejectUnauthorized: false,
@@ -69,6 +47,7 @@
             switch (response.status) {
               case 200:
               case 201:
+                console.log("resolve");
                 resolve(response.data);
                 break;
               default:
@@ -102,22 +81,25 @@
       this.server = RED.nodes.getNode(config.server);
   
       this.on('input', function (msg) {
-        //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        runCommand(this.user, this.server, config, msg)
-          .then((data) => {
-            node.status({ fill: 'green', shape: 'dot', text: 'details received' });
-            return processResponseData(msg, data);
-          })
-          .then(function (msg) {
-            node.status({});
-            node.send(msg);
-          })
-          .catch(function (err) {
-            utils.reportError(msg, err);
-            node.send(msg);
-          });
+        utils.verifyPayload(msg, config)
+        .then((data) => {
+          msg.payload = data;
+          return runCommand(this.user, this.server, config, msg);
+        })
+        .then((data) => {
+          node.status({ fill: 'green', shape: 'dot', text: 'details received' });
+          return utils.processResponseData(msg, data, 'object');
+        })
+        .then(function (msg) {
+          node.status({});
+          node.send(msg);
+        })
+        .catch(function (err) {
+          utils.reportError(msg, err);
+          node.send(msg);
+        });
       });
     }
   
