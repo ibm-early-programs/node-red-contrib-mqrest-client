@@ -1,10 +1,9 @@
 {
   "name": "node-red-contrib-mqrest-client",
   "version": "0.0.2",
-  "description": "MQI Clients",
+  "description": "MQ REST Clients",
   "dependencies": {
-    "axios": "^0.26.1",
-    "request": "^2.88.2"
+    "axios": "^0.26.1"
   },
   "repository": {
     "type": "git",
@@ -20,17 +19,19 @@
     {
       "name": "Soheel Chughtai",
       "email": "soheel_chughtai@uk.ibm.com"
+    },
+    {
+      "name": "Hayden Banes",
+      "email": "hayden.banes@ibm.com"
     }
   ],
   "node-red": {
     "nodes": {
-      "mqi": "nodes/v1.js",
-      "mqi-out": "nodes/v1-out.js",
-      "mqi-config": "nodes/v1-config.js",
+      "mqi-get": "nodes/mqrest-get.js",
+      "mqi-out": "nodes/mqrest-put.js",
       "mqi-pub": "nodes/mqrest-pub.js",
       "mqi-channel": "nodes/mqrest-channel.js",
       "mqi-installation": "nodes/mqrest-installation.js",
-      "mqi-msgconfig": "nodes/msg-config.js",
       "mqi-usrconfig": "nodes/user-config.js",
       "mqi-login": "nodes/mqrest-login.js",
       "mqi-svrconfig": "nodes/server-config.js",
@@ -46,6 +47,6 @@
     }
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=14.0.0"
   }
 }
