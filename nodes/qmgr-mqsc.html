@@ -37,14 +37,23 @@
       <input type="text" id="node-input-apiv">
     </div>
 
+    <div class="form-row">
+      <label for="node-input-contentType"><i class="fa fa-book"></i> Content Type: </label>
+      <select type="text" id="node-input-contentType" style="display: inline-block; width: 70%;">
+        <option value="text/plain">text/plain</option>
+        <option value="application/json">application/json</option>
+      </select>
+    </div>
+
     <div class="form-tips">
       <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
       <br>
       <span>This node requires the following parameters via an inject node:</span>
       <ul>
         <li><b>msg.qmgr</b> : The name the queue manager to run the MQSC command on.</li>
-        <li><b>msg.payload</b> : The command to be run on the QM.</li>
+        <li><b>msg.payload</b> : The command to be run on the QM, as JSON</li>
       </ul>
+      For full details of available commands, please refer to the IBM MQ MQSC REST API documentation <a href="https://www.ibm.com/docs/en/ibm-mq/9.2?topic=resources-adminactionqmgrqmgrnamemqsc">here</a>
     </div>
     
   </script>
@@ -73,7 +82,8 @@
                 name: { value: '' },
                 user: { value: "", type: "user-config" },
                 server: { value: "", type: "server-config"},
-                apiv: { value: ''}
+                apiv: { value: 'v2'},
+                contentType: { value: 'application/json' }
             },
             credentials: {
             },
