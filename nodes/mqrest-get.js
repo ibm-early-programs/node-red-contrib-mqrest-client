@@ -19,27 +19,10 @@ module.exports = function (RED) {
   const axios = require('axios');
   const Utils = require('./mqrest-utils');
 
-  function processResponseData(msg, data) {
-    if ('string' !== typeof data) {
-      return Promise.reject('Unexpected type data ' + typeof data);
-    } else {
-      let b = data;
-      try {
-        b = JSON.parse(data);
-      }
-      catch (e) {
-      }
-      msg.payload = b;
-    }
-
-    return Promise.resolve(msg);
-  }
-
   function readFromQueue(user, server, config, msg) {
     return new Promise(function resolver(resolve, reject) {
-      // console.log('User looks like ', user);
       // console.log('Server looks like, server);
-      // console.log('Connection looks like ', config);
+      // console.log('Config looks like ', config);
 
       //set default values
       if(msg.csrf === undefined) msg.csrf = '';
@@ -104,7 +87,7 @@ module.exports = function (RED) {
       readFromQueue(this.user, this.server, config, msg)
         .then((data) => {
           node.status({ fill: 'green', shape: 'dot', text: 'message received' });
-          return processResponseData(msg, data);
+          return utils.processResponseData(msg, data, 'string');
         })
         .then(function (msg) {
           node.status({});
@@ -118,7 +101,7 @@ module.exports = function (RED) {
     });
   }
 
-  RED.nodes.registerType('mqrest', Node, {
+  RED.nodes.registerType('mqrest-get', Node, {
     credentials: {
     }
   });
