@@ -19,28 +19,14 @@ module.exports = function (RED) {
   const axios = require("axios");
   const Utils = require("./mqrest-utils");
 
-  function processResponseData(msg, data) {
-    if ("object" !== typeof data) {
-      return Promise.reject("Unexpected type data " + typeof data);
-    } else {
-      let b = data;
-      try {
-        b = JSON.parse(data);
-      } catch (e) {}
-      msg.payload = b;
-    }
-
-    return Promise.resolve(msg);
-  }
-
-  function performOperation(user, server, config) {
+  function performOperation(user, server, config, msg) {
     return new Promise(function resolver(resolve, reject) {
       // console.log('User information looks like ', user);
       // console.log('Server information looks like ', server);
       // console.log('Configuration looks like ', config);
 
-      // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/login`);
-      // console.log(`{\"username\": \"${user.username}\", \"password\":\"${user.password}\"}`);
+      if(msg.csrf === undefined) msg.csrf = ''; 
+      if(msg.body === undefined) msg.body = 
 
       axios({
         url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/login`,
@@ -50,10 +36,10 @@ module.exports = function (RED) {
           password: user.password,
         },
         headers: {
-          "ibm-mq-rest-csrf-token": config.token,
+          "ibm-mq-rest-csrf-token": msg.csrf,
           "Content-Type": "application/json;charset=UTF-8",
         },
-        // data:`{\"username\": \"${user.username}\", \"password\":\"${user.password}\"}`,
+        data: msg.body,
         rejectUnauthorized: false,
         httpsAgent: new https.Agent({ rejectUnauthorized: false }),
       })
@@ -72,10 +58,12 @@ module.exports = function (RED) {
           }
         })
         .catch(function (error) {
+          console.log('ERROR');
+          console.log(`Request was sent to: https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/login`);
           if (error.response) {
             console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            // console.log(error.response.status);
+            // console.log(error.response.headers);
           } else if (error.request) {
             console.log(error.request);
           } else {
@@ -97,9 +85,9 @@ module.exports = function (RED) {
 
     this.on("input", function (msg) {
       node.status({ fill: "blue", shape: "dot", text: "initialising" });
-      performOperation(this.user, this.server, config)
+      performOperation(this.user, this.server, config, msg)
         .then((data) => {
-          return processResponseData(msg, data);
+          return utils.processResponseData(msg, data, 'object');
         })
         .then(function (msg) {
           node.status({});
@@ -115,16 +103,3 @@ module.exports = function (RED) {
     credentials: {},
   });
 };
-// performOperation(this.user, config)
-//   .then((data) => {
-//     node.status({ fill: 'green', shape: 'dot', text: 'details received' });
-//     return processResponseData(msg, data);
-//   })
-//   .then(function (msg) {
-//     node.status({});
-//     node.send(msg);
-//   })
-//   .catch(function (err) {
-//     utils.reportError(msg, err);
-//     node.send(msg);
-//   });

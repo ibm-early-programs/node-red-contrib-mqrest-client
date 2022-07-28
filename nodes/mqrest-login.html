@@ -41,14 +41,6 @@
         <label for="node-input-apiv"><i class="fa fa-folder-close"></i> API Version</label>
         <input type="text" id="node-input-apiv">
     </div>
-
-
-    <div class="form-row">
-        <label for="node-input-token"><i class="fa fa-bookmark"></i> MQ REST CSRF Token</label>
-        <input class="input-append-left" type="text" id="node-input-token"
-            placeholder="blank">
-    </div>
-
   
   </script>
 
@@ -74,9 +66,9 @@
             defaults: {
                 name: { value: '' },
                 user: { value: "", type: "user-config" },
-                op: { value: ''},
                 server: { value: "", type: "server-config" },
-                apiv: {value: ''},
+                op: { value: ''},
+                apiv: {value: 'v2'},
                 token: { value: "" },
             },
             credentials: {
@@ -100,7 +92,7 @@
                             options: [
                                 { value: "POST", label: "Log in" },
                                 { value: "DELETE", label: "Log out" },
-                                { value: "GET", label: "Querie User" },
+                                { value: "GET", label: "Query User" },
                             ]
                         }
                     ]
