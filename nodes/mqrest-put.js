@@ -19,34 +19,11 @@ module.exports = function (RED) {
   const axios = require('axios');
   const Utils = require('./mqrest-utils');
 
-  function verifyPayload(msg, config) {
-    let error = null;
-    let stringPayload = msg.payload;
-    let type = typeof msg.payload
-    if (!config.contentType || config.contentType.includes('text/plain')) {
-      if ('string' !== type) {
-        error = 'Expecting a string in msg.payload';
-      }
-    } else if (config.contentType.includes('application/json')) {
-      if ('object' !== type) {
-        error = 'Expecting a json object in msg.payload';
-      } else {
-        stringPayload = JSON.stringify(msg.payload);
-      }
-    }
-    if (error) {
-      return Promise.reject(error);
-    } else {
-      return Promise.resolve(stringPayload);
-    }
-  }
-
   function postToQueue(user, server, config, msg) {
     return new Promise(function resolver(resolve, reject) {
-      console.log('User information looks like ', user);
-      console.log('Server information looks like', server);
-      console.log('Configuration looks like ', config);
-      console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/messaging/qmgr/${msg.qmgr}/queue/${msg.qname}/message`,)
+      // console.log('Server information looks like', server);
+      // console.log('Configuration looks like ', config);
+      // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/messaging/qmgr/${msg.qmgr}/queue/${msg.qname}/message`,)
 
       //set default values
       if (msg.csrf === undefined) msg.csrf = '';
@@ -107,8 +84,9 @@ module.exports = function (RED) {
       //var message = '';
       node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-      verifyPayload(msg, config)
+      utils.verifyPayload(msg, config)
         .then((data) => {
+          msg.payload = data;
           return postToQueue(this.user, this.server, config, msg);
         })
         .then(function (msg) {
@@ -122,7 +100,7 @@ module.exports = function (RED) {
     });
   }
 
-  RED.nodes.registerType('mqrest-out', Node, {
+  RED.nodes.registerType('mqrest-put', Node, {
     credentials: {
     }
   });

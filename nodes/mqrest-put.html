@@ -14,7 +14,7 @@
   limitations under the License.
 -->
 
-<script type="text/html" data-template-name="mqrest-out">
+<script type="text/html" data-template-name="mqrest-put">
   <div class="form-row">
     <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
     <input type="text" id="node-input-name" placeholder="Name">
@@ -41,7 +41,7 @@
   <div class="form-row">
     <label for="node-input-contentType"><i class="fa fa-book"></i> Content Type: </label>
     <select type="text" id="node-input-contentType" style="display: inline-block; width: 70%;">
-      <option value="text/plain;charset=utf-8">text/plain;charset=utf-8</option>
+      <option value="text/plain">text/plain</option>
       <option value="application/json">application/json</option>
     </select>
   </div>
@@ -64,7 +64,7 @@
 
 </script>
 
-<script type="text/html" data-help-name="mqrest-out">
+<script type="text/html" data-help-name="mqrest-put">
   <p>This node makes use of the MQ REST API to write messages to a MQ Queue. Use the
   configuration to specify parameters.</p>
 
@@ -85,14 +85,14 @@
 
 <script type="text/javascript">
   (function() {
-    RED.nodes.registerType('mqrest-out', {
+    RED.nodes.registerType('mqrest-put', {
       category: 'output',
       defaults: {
         name: { value: '' },
         user: { value: "", type:"user-config", required:true},
         server: { value:"", type:"server-config", required:true},
-        apiv: {value: '', required: true},
-        contentType: { value: '' }
+        apiv: {value: 'v2' },
+        contentType: { value: 'text/plain' }
       },
       credentials: {
       },
