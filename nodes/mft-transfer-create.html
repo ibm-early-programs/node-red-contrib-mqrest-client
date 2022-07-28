@@ -45,20 +45,14 @@
         <option value="application/json">application/json</option>
       </select>
     </div>
-    
-    <div class="form-row">
-      <label for="node-input-mqtoken"><i class="fa fa-bookmark"></i> MQ REST CSRF Token</label>
-      <input type="text" id="node-input-mqtoken" placeholder="blank">
-    </div>
-
-    <div class="form-row">
-      <label for="node-input-body"><i class="fa fa-bookmark"></i> Request</label>
-      <input type="text" id="node-input-body">
-
-    </div>
 
     <div class="form-tips">
-      blahahah
+      <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
+      <br>
+      <span>This node allows the following parameters via an inject node:</span>
+      <ul>
+        <li><b>msg.body</b> : </li>
+      </ul>
     </div>
     
   </script>
@@ -87,10 +81,7 @@
                   name: { value: '' },
                   user: { value: "", type: "user-config" },
                   server: { value: "", type: "server-config"},
-                  body: { value: '', required: true},
-                  apiv: { value: ''},
-                  contentType: { value: ''},
-                  mqtoken: { value: ''}
+                  apiv: { value: 'v2'},
               },
               credentials: {
               },
@@ -116,15 +107,6 @@
                       ]
                     }
                   ]
-                });
-                $("#node-input-body").typedInput({
-                  type: "json",
-                  types:["json"]
-                });
-                this.editor = RED.editor.createEditor({
-                  id: 'node-input-body',
-                  mode: 'ace/mode/text',
-                  value: this.requestBody
                 });
               },
           });

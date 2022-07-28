@@ -19,29 +19,13 @@
     const axios = require('axios');
     const Utils = require('./mqrest-utils');
   
-    function processResponseData(msg, data) {
-      if ('object' !== typeof data) {
-        return Promise.reject('Unexpected type data ' + typeof data);
-      } else {
-        let b = data;
-        try {
-          b = JSON.parse(data);
-        }
-        catch (e) {
-        }
-        msg.payload = b;
-        console.log(b);
-      }
-  
-      return Promise.resolve(msg);
-    }
-  
-    function createTransfer(user, server, config) {
+    function createTransfer(user, server, config, msg) {
       return new Promise(function resolver(resolve, reject) {
 
+        // console.log('User looks like ', user);
+        // console.log('Server looks like ', server);
         // console.log('Configuration looks like ', config);
-        // console.log('User information looks like ', user);
-        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/transfer/${config.tid}`);
+        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/transfer`);
 
         axios({
           url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/transfer`,
@@ -51,16 +35,14 @@
             password: user.password,
           },
           headers: {
-            'ibm-mq-rest-csrf-token': config.mqtoken,
+            'ibm-mq-rest-csrf-token': msg.mqtoken,
             'Content-Type': config.contentType
           },
-          data: config.body,
+          data: msg.body,
           rejectUnauthorized: false,
           httpsAgent: new https.Agent({ rejectUnauthorized: false })
         })
           .then(function (response) {
-            console.log(response);
-            console.log(typeof response.data);
             switch (response.status) {
               case 200:
               case 201:
@@ -103,7 +85,7 @@
         createTransfer(this.user, this.server, config)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
-            return processResponseData(msg, data);
+            return utils.processResponseData(msg, data, 'object');
           })
           .then(function (msg) {
             node.status({});
