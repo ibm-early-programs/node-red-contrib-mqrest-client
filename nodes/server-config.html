@@ -29,6 +29,11 @@
       <label for="node-config-input-port"><i class="fa fa-bookmark"></i> Port</label>
       <input class="input-append-left" type="text" id="node-config-input-port" placeholder="9443">
     </div>
+
+    <div class="form-row hidden" id="node-row-history">
+      <label for="node-input-ssc"><i class="fa fa-tag"></i> Accept self signed certificates</label>
+      <input type="checkbox" id="node-input-ssc">
+    </div>
 </script>
 
 <script type="text/javascript">
@@ -37,8 +42,9 @@
       color: "rgb(160, 50, 50)",
       defaults: {
         name: { value: "" },
-        host: {value:"", required: true},
-        port: {value:"", required: true}
+        host: { value: "", required: true },
+        port: { value: "", required: true },
+        ssc: { value: false}
       },
       label: function() {
         return this.name || this.host;
