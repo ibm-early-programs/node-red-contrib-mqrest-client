@@ -18,43 +18,149 @@
     const https = require('https');
     const axios = require('axios');
     const Utils = require('./mqrest-utils');
-  
-    function processResponseData(msg, data) {
-      if ('object' !== typeof data) {
-        return Promise.reject('Unexpected type data ' + typeof data);
-      } else {
-        let b = data;
-        try {
-          b = JSON.parse(data);
-        }
-        catch (e) {
-        }
-        msg.payload = b;
-        console.log(b);
+
+    function request(user, server, config, msg){
+      // console.log('user : ', user);
+      // console.log('server : ', server);
+      // console.log('config : ', config);
+      // console.log('msg : ', msg);
+
+      // setting default variables
+      if(msg.csrf === undefined) msg.csrf = '';
+
+      switch (config.operation){
+        case "GET":
+          return get(user, server, config, msg);
+
+        case "POST":
+          return pst(user, server, config, msg);
+
+        case "DELETE":
+          return dlt(user, server, config, msg);
+        
       }
-  
-      return Promise.resolve(msg);
     }
   
-    function retreiveDetails(user, server, config) {
+    function get(user, server, config, msg) {
       return new Promise(function resolver(resolve, reject) {
 
-        if(config.monitorName === null){
-            config.monitorName = '';
-        }
+        if(msg.monitorName === undefined) msg.monitorName = '';
 
-        // console.log('Configuration looks like ', config);
         // console.log('User information looks like ', user);
-        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/monitor/${config.agentName}`);
+        // console.log('Server looks like ', server)
+        // console.log('Configuration looks like ', config);
+        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/monitor/${msg.monitorName}`);
 
         axios({
-          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/monitor/${config.monitorName}`,
-          method: config.method,
+          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/monitor/${msg.monitorName}`,
+          method: config.operation,
           auth: {
             username: user.username,
             password: user.password,
           },
           headers: {
+            'Accept': 'application/json'
+          },
+          rejectUnauthorized: false,
+          httpsAgent: new https.Agent({ rejectUnauthorized: false })
+        })
+          .then(function (response) {
+            switch (response.status) {
+              case 200:
+              case 201:
+                resolve(response.data);
+                break;
+              default:
+                reject('Error Invoking API ' + response.status);
+                break;
+            }
+          })
+          .catch(function (error) {
+            if (error.response) {
+              console.log(error.response.data);
+              // console.log(error.response.status);
+              // console.log(error.response.headers);
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error',error.message);
+            }
+            reject(error);
+          });
+      });
+    }
+
+    function pst(user, server, config, msg) {
+      return new Promise(function resolver(resolve, reject) {
+
+        // set default values
+        if(msg.csrf === undefined) msg.csrf = '';
+
+        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/monitor/${msg.monitorName}`);
+
+        axios({
+          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/monitor/${msg.monitorName}`,
+          method: config.operation,
+          auth: {
+            username: user.username,
+            password: user.password,
+          },
+          headers: {
+            'Accept': 'application/json'
+          },
+          rejectUnauthorized: false,
+          httpsAgent: new https.Agent({ rejectUnauthorized: false })
+        })
+          .then(function (response) {
+            switch (response.status) {
+              case 200:
+              case 201:
+                resolve(response.data);
+                break;
+              default:
+                reject('Error Invoking API ' + response.status);
+                break;
+            }
+          })
+          .catch(function (error) {
+            if (error.response) {
+              console.log(error.response.data);
+              // console.log(error.response.status);
+              // console.log(error.response.headers);
+            } else if (error.request) {
+              console.log(error.request);
+            } else {
+              console.log('Error',error.message);
+            }
+            reject(error);
+          });
+      });
+    }
+
+    function dlt(user, server, config, msg) {
+      return new Promise(function resolver(resolve, reject) {
+
+        // set default values
+        if(msg.csrf === undefined) msg.csrf = '';
+
+        var deleteHistory;
+        if(config.history){
+          deleteHistory = '/history';
+        } else {
+          deleteHistory = '';
+        }
+
+        console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/monitor/${msg.monitorName}${deleteHistory}`);
+
+        axios({
+          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/monitor/${msg.monitorName}${deleteHistory}`,
+          method: config.operation,
+          auth: {
+            username: user.username,
+            password: user.password,
+          },
+          headers: {
+            'ibm-mq-rest-csrf-token': msg.csrf,
             'Accept': 'application/json'
           },
           rejectUnauthorized: false,
@@ -100,10 +206,10 @@
         //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        retreiveDetails(this.user, this.server, config)
+        request(this.user, this.server, config, msg)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
-            return processResponseData(msg, data);
+            return utils.processResponseData(msg, data, 'object');
           })
           .then(function (msg) {
             node.status({});

@@ -37,14 +37,14 @@
       <input type="text" id="node-input-apiv">
     </div>
   
-    <div class="form-row">
-      <label for="node-input-monitorName"><i class="fa fa-tag"></i> Monitor Name</label>
-      <input type="text" id="node-input-monitorName" placeholder="<monitorName>">
+    <div class="form-row hidden" id="node-row-history">
+      <label for="node-input-history"><i class="fa fa-tag"></i> Delete history?</label>
+      <input type="checkbox" id="node-input-history">
     </div>
-
+    
     <div class="form-row">
-      <label for="node-input-method"><i class="fa fa-folder-close"></i> Method</label>
-      <input type="text" id="node-input-method">
+      <label for="node-input-operation"><i class="fa fa-folder-close"></i> Operation</label>
+      <input type="text" id="node-input-operation">
     </div>
 
   </script>
@@ -78,9 +78,9 @@
                   name: { value: '' },
                   user: { value: "", type: "user-config" },
                   server: { value: "", type: "server-config"},
-                  monitorName: { value: null },
-                  apiv: { value: ''},
-                  method: { method: ''}
+                  apiv: { value: 'v2'},
+                  operation: { value: 'GET', required:true},
+                  history: { value: false}
               },
               credentials: {
               },
@@ -107,7 +107,7 @@
                           }
                       ]
                   })
-                $("#node-input-method").typedInput({
+                $("#node-input-operation").typedInput({
                     types: [
                       {
                         value: "Method",
