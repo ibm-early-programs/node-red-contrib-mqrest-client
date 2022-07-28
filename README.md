@@ -7,38 +7,62 @@ making use of the MQ REST messaging API.
 Use the manage palette option to install these nodes.
 
 ## Usage
-Two nodes are provided. The output node is used to post messages to a MQ queue.
-The function node is used to read with delete messages from a MQ queue.
+Fourteen nodes are provided.
+<dl>
+  <dt>mqrest-channel</dt> 
+    <dd>retrieves channel information</dd>
+  <dt>mqrest-installation</dt> 
+    <dd>retrieves installation information</dd>
+  <dt>mqrest-login </dt>
+    <dd> can be used to log in, log out and query a user</dd>
+  <dt>mqrest-get</dt>
+    <dd>reads messages off a queue</dd>
+  <dt>mqrest-put</dt>
+    <dd>writes messages to a queue</dd>
+  <dt>mqrest-pub</dt>
+    <dd>publishes messages to a topic</dd>
+  <dt>mft-agent</dt>
+    <dd>retrieves MFT agent details</dd>
+  <dt>mft-monitor</dt>
+    <dd>performs MFT monitor operations</dd>
+  <dt>mft-transfer-retrieve</dt>
+    <dd>retrieves details of transfers</dd>
+  <dt>mft-transfers-create</dt>
+    <dd>creates transfers</dd>
+  <dt>mqrest-qmgr</dt>
+    <dd>retrieves details of queue managers</dd>
+  <dt>qmgr-mqsc</dt>
+    <dd>runs an MQSC command</dd>
+  <dt>mqrest-queue</dt>
+    <dd>creates, deletes, modifies and retrieves details of a queue</dd>
+  <dt>mqrest-sub</dt>
+    <dd>retrieves details of subscriptions</dd>
+</dl>
 
 ## Configuration
-Use the configuration to specify the full API URL. Which will look something like:
+Use the configuration to enter user and server details. Once created the user and server details can be reused with other mqrest nodes.
 
-https://&lt;host&gt;:&lt;port&gt;/ibmmq/rest/v1/messaging/qmgr/&lt;queue manager&gt;/queue/&lt;queue&gt;/message
+In user:
+<dl>
+  <dt>username</dt>
+  <dd>is the username of a user with authentication to use the REST API</dd>
+  <dt>password</dt>
+  <dd>the password for this user</dd>
 
-Where:
+
+In server:
 <dl>
   <dt>host</dt>
   <dd>could be `localhost` if running MQ in a local docker image.</dd>
   <dt>port</dt>
   <dd>is typically 9443</dd>
-  <dt>queue manager</dt>
-  <dd>may be something like `QM1`</dd>  
-  <dt>queue</dt>
-  <dd>may be something like `DEV.QUEUE.1`</dd>    
 </dl>
 
-resulting in
-https://localhost:9443/ibmmq/rest/v1/messaging/qmgr/QM1/queue/DEV.QUEUE.1/message
-
-
 ### Input
-The output node expects the message to place on a queue to be in `msg.payload` and  
-can be either a text string or a json object.
+Each node expects parameters via a `msg` object (e.g. the message to place on a queue to be in `msg.payload`). See the configuration panel of a node to see its expected parameters.
 
 ### Output
-The function node performs a read with delete. If found the message is placed on
-`msg.payload`. If the message is a JSON object, then
-it is first converted into a JSON object before placing on `msg.payload`
+If a node can give an output, it will have a connector on the right. The output will almost always be the json string returned from MQ.
 
 ## Contributing
 For simple typos and fixes please just raise an issue pointing out our mistakes. If you need to raise a pull request please read our [contribution guidelines](https://github.com/ibm-early-programs/node-red-contrib-mqrest-client/blob/master/CONTRIBUTING.md) before doing so.
@@ -46,4 +70,4 @@ For simple typos and fixes please just raise an issue pointing out our mistakes.
 
 ## Copyright and license
 
-Copyright 2018 IBM Corp. under the Apache 2.0 license.
+Copyright 2022 IBM Corp. under the Apache 2.0 license.
