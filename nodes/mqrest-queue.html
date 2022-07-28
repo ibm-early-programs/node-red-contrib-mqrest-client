@@ -55,19 +55,19 @@
       <span>This node requires the following parameter via an inject node:</span>
       <br>
       <ul>
-        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.mqparams.qmgr</b> : The name of the MQ Queue Manager</li>
       </ul>
       It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
       <ul>
-        <li><b>msg.type</b> : </li>
-        <li><b>msg.name</b> : </li>
-        <li><b>msg.attributes</b> : </li>
-        <li><b>msg.status</b> : </li>
-        <li><b>msg.appHandle</b> : </li>
-        <li><b>msg.filter</b> : </li>
-        <li><b>msg.cmdScope</b> : </li>
-        <li><b>msg.qsgd</b> : </li>
-        <li><b>msg.gatewayQMGR</b> : </li>
+        <li><b>msg.mqparams.type</b> : </li>
+        <li><b>msg.mqparams.name</b> : </li>
+        <li><b>msg.mqparams.attributes</b> : </li>
+        <li><b>msg.mqparams.status</b> : </li>
+        <li><b>msg.mqparams.appHandle</b> : </li>
+        <li><b>msg.mqparams.filter</b> : </li>
+        <li><b>msg.mqparams.cmdScope</b> : </li>
+        <li><b>msg.mqparams.qsgd</b> : </li>
+        <li><b>msg.mqparams.gatewayQMGR</b> : </li>
       </ul>
     </div>
 
@@ -75,16 +75,16 @@
       <span>This node requires the following parameter via an inject node:</span>
       <br>
       <ul>
-        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.mqparams.qmgr</b> : The name of the MQ Queue Manager</li>
       </ul>
       It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
       <ul>
-        <li><b>msg.like</b> : </li>
-        <li><b>msg.noReplace</b> : </li>
-        <li><b>msg.cmdScope</b> : </li>
-        <li><b>msg.payload</b> : </li>
-        <li><b>msg.csrf</b> : </li>
-        <li><b>msg.gatewayQMGR</b> : </li>
+        <li><b>msg.mqparams.like</b> : </li>
+        <li><b>msg.mqparams.noReplace</b> : </li>
+        <li><b>msg.mqparams.cmdScope</b> : </li>
+        <li><b>msg.mqparams.payload</b> : </li>
+        <li><b>msg.mqparams.csrf</b> : </li>
+        <li><b>msg.mqparams.gatewayQMGR</b> : </li>
       </ul>
     </div>
 
@@ -92,17 +92,17 @@
       <span>This node requires the following parameter via an inject node:</span>
       <br>
       <ul>
-        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
-        <li><b>msg.qname</b> : </li>
+        <li><b>msg.mqparams.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.mqparams.qname</b> : </li>
       </ul>
       It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
       <ul>
-        <li><b>msg.keepAuthorityRecords</b> : </li>
-        <li><b>msg.purge</b> : </li>
-        <li><b>msg.cmdScope</b> : </li>
-        <li><b>msg.qsgd</b> : </li>
-        <li><b>msg.csrf</b> : </li>
-        <li><b>msg.gatewayQMGR</b> : </li>
+        <li><b>msg.mqparams.keepAuthorityRecords</b> : </li>
+        <li><b>msg.mqparams.purge</b> : </li>
+        <li><b>msg.mqparams.cmdScope</b> : </li>
+        <li><b>msg.mqparams.qsgd</b> : </li>
+        <li><b>msg.mqparams.csrf</b> : </li>
+        <li><b>msg.mqparams.gatewayQMGR</b> : </li>
       </ul>
     </div>
 
@@ -110,16 +110,16 @@
       <span>This node requires the following parameter via an inject node:</span>
       <br>
       <ul>
-        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
-        <li><b>msg.qname</b> : </li>
+        <li><b>msg.mqparams.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.mqparams.qname</b> : </li>
       </ul>
       It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
       <ul>
-        <li><b>msg.force</b> : </li>
-        <li><b>msg.cmdScope</b> : </li>
-        <li><b>msg.payload</b> : </li>
-        <li><b>msg.csrf</b> : </li>
-        <li><b>msg.gatwayQMGR</b> : </li>
+        <li><b>msg.mqparams.force</b> : </li>
+        <li><b>msg.mqparams.cmdScope</b> : </li>
+        <li><b>msg.mqparams.payload</b> : </li>
+        <li><b>msg.mqparams.csrf</b> : </li>
+        <li><b>msg.mqparams.gatwayQMGR</b> : </li>
       </ul>
     </div>
 
@@ -151,7 +151,7 @@
                 name: { value: "" },
                 user: { value: "", type: "user-config", required: true },
                 server: { value: "", type: "server-config", required: true },
-                apiv: { value: '', required: true },
+                apiv: { value: 'v1' },
                 operation: { value: "GET" }
             },
             credentials: {},
@@ -177,6 +177,7 @@
                   }
                 ]
               });
+              
               var updateOptions = function () {
                 switch ($("#node-input-operation").val()) {
                   case "GET":
