@@ -30,9 +30,9 @@
       <input class="input-append-left" type="text" id="node-config-input-port" placeholder="9443">
     </div>
 
-    <div class="form-row hidden" id="node-row-history">
-      <label for="node-input-ssc"><i class="fa fa-tag"></i> Accept self signed certificates</label>
-      <input type="checkbox" id="node-input-ssc">
+    <div class="form-row">
+      <input type="checkbox" id="node-input-allowSelfSigned" style="display:inline-block; width:20px; vertical-align:baseline;">
+      <label for="node-input-allowSelfSigned" style="width:auto"><i class="fa fa-tag"></i> Accept self-signed certificates? </label>
     </div>
 </script>
 
@@ -44,10 +44,17 @@
         name: { value: "" },
         host: { value: "", required: true },
         port: { value: "", required: true },
-        ssc: { value: false}
+        allowSelfSigned: { value: true, required:true}
       },
       label: function() {
         return this.name || this.host;
+      },
+      oneditprepare: function() {
+        if(this.allowSelfSigned){
+          $("#node-input-allowSelfSigned").prop("checked", true);
+        } else {
+          $("#node-input-allowSelfSigned").prop("checked", false);
+        }
       }
 
     });

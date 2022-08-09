@@ -59,6 +59,7 @@
       </ul>
       It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
       <ul>
+        <li><b>msg.mqparams.qname</b> : </li>
         <li><b>msg.mqparams.type</b> : </li>
         <li><b>msg.mqparams.name</b> : </li>
         <li><b>msg.mqparams.attributes</b> : </li>
@@ -146,7 +147,7 @@
 <script type="text/javascript">
     (function () {
         RED.nodes.registerType("mqrest-queue", {
-            category: "output",
+            category: 'IBM MQ REST',
             defaults: {
                 name: { value: "" },
                 user: { value: "", type: "user-config", required: true },

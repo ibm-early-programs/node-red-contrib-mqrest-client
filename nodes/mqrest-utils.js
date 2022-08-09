@@ -54,7 +54,7 @@ class MQRESTUtils {
       catch (e) {
       }
       msg.payload = b;
-      console.log("here", b);
+      // console.log("here", b);
     }
 
     return Promise.resolve(msg);
