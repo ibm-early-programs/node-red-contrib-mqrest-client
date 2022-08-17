@@ -14,7 +14,7 @@
   limitations under the License.
 -->
 
-<script type="text/html" data-template-name="mft-transfer-create">
+<script type="text/html" data-template-name="mft-transfer">
     <div class="form-row">
       <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
       <input type="text" id="node-input-name" placeholder="Name">
@@ -37,6 +37,10 @@
       <input type="text" id="node-input-apiv">
     </div>
 
+    <div class="form-row">
+      <label for="node-input-operation"><i class="fa fa-folder-close"></i> Operation</label>
+      <input type="text" id="node-input-operation">
+    </div>
     
     <div class="form-row">
       <label for="node-input-contentType"><i class="fa fa-book"></i> Content Type: </label>
@@ -51,13 +55,13 @@
       <br>
       <span>This node allows the following parameters via an inject node:</span>
       <ul>
-        <li><b>msg.body</b> : </li>
+        <li><b>msg.payload</b> : </li>
       </ul>
     </div>
     
   </script>
   
-  <script type="text/html" data-help-name="mft-transfer-create">
+  <script type="text/html" data-help-name="mft-transfer">
     <p>This node makes use of the MQ REST API to create MFT transfers.</p>
   
     <p>Use the configuration to specify node parameters.</p>
@@ -75,23 +79,24 @@
   
   <script type="text/javascript">
       (function () {
-          RED.nodes.registerType('mft-transfer-create', {
+          RED.nodes.registerType('mft-transfer', {
               category: 'IBM MQ REST',
               defaults: {
                   name: { value: '' },
                   user: { value: "", type: "user-config" },
                   server: { value: "", type: "server-config"},
                   apiv: { value: 'v2'},
+                  operation: {value: 'GET'}
               },
               credentials: {
               },
               color: '#C7E9C0',
               inputs: 1,
               outputs: 1,
-              paletteLabel: 'MFT Transfer (create)',
+              paletteLabel: 'MFT Transfer',
               icon: 'feed.png',
               label: function () {
-                  return this.name || 'MFT Transfer (create)';
+                  return this.name || 'MFT Transfer';
               },
               labelStyle: function () {
                   return this.name ? 'node_label_italic node_label_black' : 'node_label_black';
@@ -107,6 +112,17 @@
                       ]
                     }
                   ]
+                }),
+                $("#node-input-operation").typedInput({
+                    types: [
+                      {
+                        value: "operation",
+                        options: [
+                          { value: "GET", label: "GET"},
+                          { value: "POST", label: "POST"}
+                        ]
+                      }
+                    ]
                 });
               },
           });
