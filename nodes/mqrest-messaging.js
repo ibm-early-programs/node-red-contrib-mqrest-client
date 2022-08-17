@@ -38,11 +38,9 @@ module.exports = function (RED) {
       } else {
         url = `${this.server.prefix}/${config.apiv}/messaging/qmgr/${msg.qmgr}/queue/${msg.qname}/message`;
       }
-
-
+      
       var axiosCommand = utils.axiosCommand(this.user, config, msg, url);
       axiosCommand = utils.generateOptionalHeaders(msg, axiosCommand);
-      console.log(axiosCommand);
 
       utils.axiosRequest(axiosCommand)
         .then((data) => {

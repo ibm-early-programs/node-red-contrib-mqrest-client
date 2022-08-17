@@ -109,7 +109,7 @@ class MQRESTUtils {
 
 	axiosCommand(user, config, msg, url) {
 		var axiosCommand = {
-			url: url,
+			url: url+this.generateOptionalParams(msg),
 			method: config.operation,
 			auth: {
 				username: user.username,
@@ -136,6 +136,7 @@ class MQRESTUtils {
 				break;	
 		}
 		axiosCommand.headers['Accept'] = config.accept??'application/json';
+		axiosCommand = this.generateOptionalHeaders(msg, axiosCommand);
 		return axiosCommand;
 	}
 

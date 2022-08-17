@@ -32,7 +32,7 @@
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
         config.operation = 'GET';
-        var url = `${this.server.prefix}/${config.apiv}/admin/installation/${msg.installName??''}${utils.generateOptionalParams(msg)}`
+        var url = `${this.server.prefix}/${config.apiv}/admin/installation/${msg.installName??''}`
         var axiosCommand = utils.axiosCommand(this.user, config, msg, url);
         
         utils.axiosRequest(axiosCommand)

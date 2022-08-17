@@ -30,12 +30,8 @@ module.exports = function (RED) {
   
     this.on("input", function (msg) {
 
-      var url = `${this.server.prefix}/${config.apiv}/admin/qmgr/${msg.qmgr ?? ''}/queue/${msg.qname ?? ''}${utils.generateOptionalParams(msg)}`;
+      var url = `${this.server.prefix}/${config.apiv}/admin/qmgr/${msg.qmgr ?? ''}/queue/${msg.qname ?? ''}`;
       var axiosCommand = utils.axiosCommand(this.user, config, msg, url);
-
-      if(msg.gatewayQMGR !== undefined){
-        axiosCommand['headers']['ibm-mq-rest-gateway-qmgr'] = `${msg.gatewayQMGR}`;
-      }
       
       utils.axiosRequest(axiosCommand)
         .then((data) => {
