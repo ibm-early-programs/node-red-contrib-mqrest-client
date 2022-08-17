@@ -45,6 +45,7 @@
         <label for="node-input-apiv"><i class="fa fa-folder-close"></i>API Version</label>
         <input type="text" id="node-input-apiv">
     </div>
+    
     <div class="form-tips">
       <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
     </div>
@@ -55,20 +56,19 @@
       <span>This node requires the following parameter via an inject node:</span>
       <br>
       <ul>
-        <li><b>msg.mqparams.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
       </ul>
       It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
       <ul>
-        <li><b>msg.mqparams.qname</b> : </li>
         <li><b>msg.mqparams.type</b> : </li>
         <li><b>msg.mqparams.name</b> : </li>
         <li><b>msg.mqparams.attributes</b> : </li>
         <li><b>msg.mqparams.status</b> : </li>
-        <li><b>msg.mqparams.appHandle</b> : </li>
+        <li><b>msg.mqparams.applicationHandle</b> : </li>
         <li><b>msg.mqparams.filter</b> : </li>
-        <li><b>msg.mqparams.cmdScope</b> : </li>
-        <li><b>msg.mqparams.qsgd</b> : </li>
-        <li><b>msg.mqparams.gatewayQMGR</b> : </li>
+        <li><b>msg.mqparams.commandScope</b> : </li>
+        <li><b>msg.mqparams.queueSharingGroupDisposition</b> : </li>
+        <li><b>msg.gatewayQMGR</b> : </li>
       </ul>
     </div>
 
@@ -76,7 +76,7 @@
       <span>This node requires the following parameter via an inject node:</span>
       <br>
       <ul>
-        <li><b>msg.mqparams.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
       </ul>
       It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
       <ul>
@@ -85,7 +85,7 @@
         <li><b>msg.mqparams.cmdScope</b> : </li>
         <li><b>msg.mqparams.payload</b> : </li>
         <li><b>msg.mqparams.csrf</b> : </li>
-        <li><b>msg.mqparams.gatewayQMGR</b> : </li>
+        <li><b>msg.gatewayQMGR</b> : </li>
       </ul>
     </div>
 
@@ -93,8 +93,8 @@
       <span>This node requires the following parameter via an inject node:</span>
       <br>
       <ul>
-        <li><b>msg.mqparams.qmgr</b> : The name of the MQ Queue Manager</li>
-        <li><b>msg.mqparams.qname</b> : </li>
+        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.qname</b> : </li>
       </ul>
       It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
       <ul>
@@ -103,7 +103,7 @@
         <li><b>msg.mqparams.cmdScope</b> : </li>
         <li><b>msg.mqparams.qsgd</b> : </li>
         <li><b>msg.mqparams.csrf</b> : </li>
-        <li><b>msg.mqparams.gatewayQMGR</b> : </li>
+        <li><b>msg.gatewayQMGR</b> : </li>
       </ul>
     </div>
 
@@ -111,8 +111,8 @@
       <span>This node requires the following parameter via an inject node:</span>
       <br>
       <ul>
-        <li><b>msg.mqparams.qmgr</b> : The name of the MQ Queue Manager</li>
-        <li><b>msg.mqparams.qname</b> : </li>
+        <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+        <li><b>msg.qname</b> : </li>
       </ul>
       It also supports a range of optional parameters, which depend on the operation used. Select the operation above to see the parameters, or refer to the documentation.
       <ul>
@@ -120,7 +120,7 @@
         <li><b>msg.mqparams.cmdScope</b> : </li>
         <li><b>msg.mqparams.payload</b> : </li>
         <li><b>msg.mqparams.csrf</b> : </li>
-        <li><b>msg.mqparams.gatwayQMGR</b> : </li>
+        <li><b>msg.gatwayQMGR</b> : </li>
       </ul>
     </div>
 

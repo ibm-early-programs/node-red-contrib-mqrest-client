@@ -15,239 +15,44 @@
  **/
 
 module.exports = function (RED) {
-    const https = require("https");
-    const axios = require("axios");
-    const Utils = require("./mqrest-utils");
+  const https = require('https');
+  const axios = require("axios");
+  const Utils = require("./mqrest-utils");
 
-    function request(user, server, config, msg) {
-        // console.log('User looks like ', user);
-        // console.log('Server looks like ', server);
-        // console.log('Configuration looks like ', config);
+  function Node(config) {
+    var node = this;
+    const utils = new Utils(node);
 
-        // setting default variables
-        if(msg.csrf === undefined) msg.csrf = '';
+    RED.nodes.createNode(this, config);
 
-        switch (config.operation) {
-            case "GET":
-                return get(user, server, config, msg);
+    this.user = RED.nodes.getNode(config.user);
+    this.server = RED.nodes.getNode(config.server);
+  
+    this.on("input", function (msg) {
 
-            case "POST":
-                return pst(user, server, config, msg);
+      var url = `${this.server.prefix}/${config.apiv}/admin/qmgr/${msg.qmgr ?? ''}/queue/${msg.qname ?? ''}${utils.generateOptionalParams(msg)}`;
+      var axiosCommand = utils.axiosCommand(this.user, config, msg, url);
 
-            case "DELETE":
-                return dlt(user, server, config, msg);
-
-            case "PATCH":
-                return ptch(user, server, config, msg);
-
-        }
-
-    }
-
-
-    function get(user, server, config, msg) {
-        // setting default variables
-        if(msg.qname === undefined) msg.qname = '';
-
-        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue/${msg.qname}`);
-
-
-        return new Promise(function resolver(resolve, reject) {
-            axios({
-                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue/${msg.qname}`,
-                method: config.operation,
-                auth: {
-                    username: user.username,
-                    password: user.password,
-                },
-                rejectUnauthorized: false,
-                httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-            })
-                .then(function (response) {
-                    switch (response.status) {
-                        case 200:
-                            resolve(response.data);
-                            break;
-                        default:
-                            reject("Error invoking API " + response.status);
-                            break;
-
-                    }
-                })
-                .catch(function (error) {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        // console.log(error.response.status);
-                        // console.log(error.response.headers);
-                    } else if (error.request) {
-                        console.log(error.request);
-                    } else {
-                        console.log("Error", error.message);
-                    }
-                    reject(error);
-                });
-
-        });
-    }
-
-    function pst(user, server, config, msg) {
-        
-        return new Promise(function resolver(resolve, reject) {
-            axios({
-                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue`,
-                method: config.operation,
-                auth: {
-                    username: user.username,
-                    password: user.password,
-                },
-                headers: {
-                    'ibm-mq-rest-csrf-token': msg.csrf,
-                    'Content-Type': "application/json"
-                },
-                data: msg.payload,
-                rejectUnauthorized: false,
-                httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-            })
-                .then(function (response) {
-                    console.log(response.status);
-                    switch (response.status) {
-                        case 201:
-                            resolve({"status": `${response.status}`});
-                            break;
-                        default:
-                            reject("Error invoking API " + response.status);
-                            break;
-
-                    }
-                })
-                .catch(function (error) {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        // console.log(error.response.status);
-                        // console.log(error.response.headers);
-                    } else if (error.request) {
-                        console.log(error.request);
-                    } else {
-                        console.log("Error", error.message);
-                    }
-                    reject(error);
-                });
-
-        });
-    }
-
-    function dlt(user, server, config, msg) {
-        return new Promise(function resolver(resolve, reject) {
-            axios({
-                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue/${msg.qname}`,
-                method: config.operation,
-                auth: {
-                    username: user.username,
-                    password: user.password,
-                },
-                headers: {
-                    'ibm-mq-rest-csrf-token': msg.csrf,
-                    'Content-Type': "application/json"
-                },
-                rejectUnauthorized: false,
-                httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-            })
-                .then(function (response) {
-                    switch (response.status) {
-                        case 204:
-                            resolve({"status":`${response.status}`});
-                            break;
-                        default:
-                            reject("Error invoking API " + response.status);
-                            break;
-
-                    }
-                })
-                .catch(function (error) {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        // console.log(error.response.status);
-                        // console.log(error.response.headers);
-                    } else if (error.request) {
-                        console.log(error.request);
-                    } else {
-                        console.log("Error", error.message);
-                    }
-                    reject(error);
-                });
-
-        });
-    }
-
-    function ptch(user, server, config, msg){
-        return new Promise(function resolver(resolve, reject) {
-            axios({
-                url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/qmgr/${msg.qmgr}/queue/${msg.qname}`,
-                method: config.operation,
-                auth: {
-                    username: user.username,
-                    password: user.password,
-                },
-                headers: {
-                    'ibm-mq-rest-csrf-token': msg.csrf,
-                    'Content-Type': "application/json"
-                },
-                data: msg.payload,
-                rejectUnauthorized: false,
-                httpsAgent: new https.Agent({ rejectUnauthorized: false }),
-            })
-            .then(function (response) {
-                switch (response.status) {
-                    case 204:
-                        resolve({"status": `${response.status}`});
-                        break;
-                    default:
-                        reject("Error invoking API " + response.status);
-                        break;
-
-                }
-            })
-            .catch(function (error) {
-                if (error.response) {
-                    console.log(error.response.data);
-                    // console.log(error.response.status);
-                    // console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log("Error", error.message);
-                }
-                reject(error);
-            });
+      if(msg.gatewayQMGR !== undefined){
+        axiosCommand['headers']['ibm-mq-rest-gateway-qmgr'] = `${msg.gatewayQMGR}`;
+      }
+      
+      utils.axiosRequest(axiosCommand)
+        .then((data) => {
+          return utils.processResponseData(msg, data, 'object');
         })
-    }
-
-    function Node(config) {
-        var node = this;
-        const utils = new Utils(node);
-
-        RED.nodes.createNode(this, config);
-
-        this.user = RED.nodes.getNode(config.user);
-        this.server = RED.nodes.getNode(config.server);
-
-        this.on("input", function (msg) {
-            request(this.user, this.server, config, msg)
-                .then((data) => {
-                    return utils.processResponseData(msg, data, 'object');
-                })
-                .then(function(msg) {
-                    node.send(msg);
-                })
-                .catch(function (err) {
-                    utils.reportError(msg, err);
-                    node.send(msg);
-                })
-        });
-
-    }
-
-    RED.nodes.registerType("mqrest-queue", Node, {
-        credentials: {},
+        .then(function (msg) {
+          node.status({});
+          node.send(msg);
+        })
+        .catch(function (err) {
+          utils.reportError(msg, err);
+          node.send(msg);
+        })
     });
+  }
+
+  RED.nodes.registerType("mqrest-queue", Node, {
+    credentials: {},
+  });
 };

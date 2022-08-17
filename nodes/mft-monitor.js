@@ -203,10 +203,14 @@
       this.server = RED.nodes.getNode(config.server);
   
       this.on('input', function (msg) {
-        //var message = '';
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        request(this.user, this.server, config, msg)
+        if(config.history && msg.monitorName !== undefined) msg.history = '/history';
+
+        var url = `${this.server.prefix}/${config.apiv}/admin/mft/monitor/${msg.monitorNam??''}${msg.history??''}`;
+        var axiosCommand = utils.axiosCommand(this.user, config, msg, url);
+
+        utils.axiosRequest(axiosCommand)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
             return utils.processResponseData(msg, data, 'object');

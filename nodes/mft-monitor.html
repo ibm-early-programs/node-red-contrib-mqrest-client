@@ -110,7 +110,7 @@
                 $("#node-input-operation").typedInput({
                     types: [
                       {
-                        value: "Method",
+                        value: "operation",
                         options: [
                           { value: "GET", label: "GET"},
                           { value: "POST", label: "POST"},
@@ -119,6 +119,12 @@
                       }
                     ]
                 })
+
+                if(this.history){
+                  $("#node-input-history").prop("checked", true);
+                } else {
+                  $("#node-input-history").prop("checked", false);
+                }
               }
           });
       })();

@@ -38,12 +38,18 @@
     </select>
   </div>
 
+  <div class="form-row">
+    <label for="node-input-accept"><i class="fa fa-folder-close"></i>Response Content Type</label>
+    <input type="text" id="node-input-accept">
+  </div>
+
   <div class="form-tips">
     <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
     <br>
-    <span>This node allows the following parameters via an inject node:</span>
+    <span>This node accepts the following parameters via the message object:</span>
     <ul>
       <li><b>msg.installName</b> : The name of an installation.</li>
+      <li><b>msg.mqparams.attributes</b> : </li>
     </ul>
   </div>
   
@@ -71,7 +77,6 @@
         category: 'IBM MQ REST',
         defaults: {
           name: { value: '' },
-          installName: { value: ""},
           user: { value: "", type: "user-config", required:true},
           server: { value: "", type: "server-config", required:true },
           apiv: { value: 'v2' }
@@ -100,7 +105,17 @@
                 ]
               }
             ]
-          })
+          }),
+          $("#node-input-accept").typedInput({
+          types: [
+            {
+              value: "Content type",
+              options: [
+                { value: "application/json; charset=utf-8", label: "application/json; charset=utf-8"}
+              ]
+            }
+          ]
+        });
         }
       });
     })();

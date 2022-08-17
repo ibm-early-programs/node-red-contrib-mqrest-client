@@ -17,59 +17,7 @@
  module.exports = function (RED) {
     const https = require('https');
     const axios = require('axios');
-    const Utils = require('./mqrest-utils');
-  
-    function retrieveDetails(user, server, config) {
-      return new Promise(function resolver(resolve, reject) {
-
-        if(config.agentName === null){
-            config.agentName = '';
-        }
-
-        // console.log('Configuration looks like ', config);
-        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/agent/${config.agentName}`);
-
-        axios({
-          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/mft/agent/${config.agentName}`,
-          method: 'GET',
-          auth: {
-            username: user.username,
-            password: user.password,
-          },
-          headers: {
-            'Accept': 'application/json'
-          },
-          rejectUnauthorized: false,
-          httpsAgent: new https.Agent({ rejectUnauthorized: false })
-        })
-          .then(function (response) {
-            // console.log(response);
-            // console.log(typeof response.data);
-            switch (response.status) {
-              case 200:
-              case 201:
-                resolve(response.data);
-                break;
-              default:
-                reject('Error Invoking API ' + response.status);
-                break;
-            }
-          })
-          .catch(function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              // console.log(error.response.status);
-              // console.log(error.response.headers);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log('Error',error.message);
-            }
-            reject(error);
-          });
-      });
-    }
-  
+    const Utils = require('./mqrest-utils');  
   
     function Node(config) {
       let node = this;
@@ -81,10 +29,14 @@
       this.server = RED.nodes.getNode(config.server);
   
       this.on('input', function (msg) {
-        //var message = '';
+
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
-        retrieveDetails(this.user, this.server, config)
+        config.operation = 'GET';
+        var url = `${this.server.prefix}/${config.apiv}/admin/mft/agent/${msg.agentName??''}`;
+        var axiosCommand = utils.axiosCommand(this.user, config, msg, url);
+
+        utils.axiosRequest(axiosCommand)
           .then((data) => {
             node.status({ fill: 'green', shape: 'dot', text: 'details received' });
             return utils.processResponseData(msg, data, 'object');

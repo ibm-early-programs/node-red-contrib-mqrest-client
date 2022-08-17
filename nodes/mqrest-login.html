@@ -33,13 +33,21 @@
     </div>
 
     <div class="form-row">
-        <label for="node-input-op"><i class="fa fa-folder-close"></i> Operation</label>
-        <input type="text" id="node-input-op">
+        <label for="node-input-operation"><i class="fa fa-folder-close"></i> Operation</label>
+        <input type="text" id="node-input-operation">
     </div>
 
     <div class="form-row">
         <label for="node-input-apiv"><i class="fa fa-folder-close"></i> API Version</label>
         <input type="text" id="node-input-apiv">
+    </div>
+
+    <div class="form-tips hidden" id="node-row-body-tips">
+        <span>The <b>'Log in'</b> operation requires a user details to be specified in msg.payload</span>
+    </div>
+
+    <div class="form-tips hidden" id="node-row-csrf-tips">
+        <span>The <b>'Log out'</b> operation requires a ibm-mq-rest-csrf-token to be provided via msg.csrf</span>
     </div>
   
   </script>
@@ -67,7 +75,7 @@
                 name: { value: '' },
                 user: { value: "", type: "user-config" },
                 server: { value: "", type: "server-config" },
-                op: { value: ''},
+                operation: { value: ''},
                 apiv: {value: 'v2'},
                 token: { value: "" },
             },
@@ -85,7 +93,7 @@
                 return this.name ? 'node_label_italic node_label_black' : 'node_label_black';
             },
             oneditprepare: function () {
-                $("#node-input-op").typedInput({
+                $("#node-input-operation").typedInput({
                     types: [
                         {
                             value: "operations",
@@ -107,8 +115,26 @@
                             ]
                         }
                     ]
-                })
+                });
 
+                var updateOptions = function () {
+                    switch ($("#node-input-operation").val()) {
+                        case "DELETE":
+                            $("#node-row-body-tips").hide();
+                            $("#node-row-csrf-tips").show();
+                            break;
+                        case "POST":
+                            $("#node-row-body-tips").show();
+                            $("#node-row-csrf-tips").hide();
+                            break;
+                        default:
+                            $("#node-row-body-tips").hide();
+                            $("#node-row-csrf-tips").hide();
+                            break;
+                    }
+                }
+                updateOptions();
+                $("#node-input-operation").change(updateOptions);
             }
 
         });

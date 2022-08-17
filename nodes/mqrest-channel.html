@@ -32,6 +32,11 @@
     </select>
   </div>
 
+  <div class="form-row">
+    <label for="node-input-accept"><i class="fa fa-folder-close"></i>Response Content Type</label>
+    <input type="text" id="node-input-accept">
+  </div>
+
   <div class="form-tips">
     <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
     <br>
@@ -44,6 +49,11 @@
     Optional:
     <ul>
       <li><b>msg.chnlName</b> : The name of a channel.</li>
+      <li><b>msg.mqparams.attributes</b> : </li>
+      <li><b>msg.mqparams.status</b> : </li>
+      <li><b>msg.mqparams.filter</b> : </li>
+      <li><b>msg.mqparams.queueSharingGroupDisposition</b> : </li>
+      <li><b>msg.gatewayQMGR.</b> : </li>
     </ul>
   </div>
   
@@ -72,7 +82,8 @@
       defaults: {
         name: { value: '' },
         user: { value: "", type: "user-config", required:true },
-        server: { value: "", type: "server-config", required:true }
+        server: { value: "", type: "server-config", required:true },
+        accept: { value: "application/json; charset=utf-8"}, 
       },
       credentials: {
       },
@@ -86,6 +97,18 @@
       },
       labelStyle: function () {
         return this.name ? 'node_label_italic node_label_black' : 'node_label_black';
+      },
+      oneditprepare: function () {
+        $("#node-input-accept").typedInput({
+          types: [
+            {
+              value: "Content type",
+              options: [
+                { value: "application/json; charset=utf-8", label: "application/json; charset=utf-8"}
+              ]
+            }
+          ]
+        });
       }
     });
   })();

@@ -19,58 +19,6 @@
     const axios = require('axios');
     const Utils = require('./mqrest-utils');
   
-    function runCommand(user, server, config, msg) {
-      return new Promise(function resolver(resolve, reject) {
-        // console.log('Server looks like' , server);
-        // console.log('Configuration looks like ', config);
-        // console.log(`https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${config.qmgr}/mqsc`);
-
-        //set default values
-        if(msg.csrf === undefined) msg.csrf = '';
-        
-        axios({
-          url: `https://${server.host}:${server.port}/ibmmq/rest/${config.apiv}/admin/action/qmgr/${msg.qmgr}/mqsc`,
-          method: 'POST',
-          auth: {
-            username: user.username,
-            password: user.password,
-          },
-          headers: {
-            'ibm-mq-rest-csrf-token': msg.csrf,
-            'Content-Type': config.contentType
-          },
-          data: msg.payload,
-          rejectUnauthorized: false,
-          httpsAgent: new https.Agent({ rejectUnauthorized: false })
-        })
-          .then(function (response) {
-            switch (response.status) {
-              case 200:
-              case 201:
-                console.log("resolve");
-                resolve(response.data);
-                break;
-              default:
-                reject('Error Invoking API ' + response.status);
-                break;
-            }
-          })
-          .catch(function (error) {
-            if (error.response) {
-              console.log(error.response.data);
-              // console.log(error.response.status);
-              // console.log(error.response.headers);
-            } else if (error.request) {
-              console.log(error.request);
-            } else {
-              console.log('Error',error.message);
-            }
-            reject(error);
-          });
-      });
-    }
-  
-  
     function Node(config) {
       let node = this;
       const utils = new Utils(node);
@@ -83,10 +31,14 @@
       this.on('input', function (msg) {
         node.status({ fill: 'blue', shape: 'dot', text: 'initialising' });
 
+        config.operation = 'POST';
+        var url = `${this.server.prefix}/${config.apiv}/admin/action/qmgr/${msg.qmgr}/mqsc`;
+        var axiosCommand = utils.axiosCommand(this.user, config, msg, url);
+
         utils.verifyPayload(msg, config)
         .then((data) => {
-          msg.payload = data;
-          return runCommand(this.user, this.server, config, msg);
+          axiosCommand.data = data;
+          return utils.axiosRequest(axiosCommand);
         })
         .then((data) => {
           node.status({ fill: 'green', shape: 'dot', text: 'details received' });
