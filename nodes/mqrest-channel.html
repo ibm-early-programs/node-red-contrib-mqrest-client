@@ -1,0 +1,115 @@
+<!--
+  Copyright 2022 IBM Corp.
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<script type="text/html" data-template-name="mqrest-channel">
+  <div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-user"><i class="fa fa-folder-close"></i> User</label>
+    <select id="node-input-user" style="width:68%;">
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-server"><i class="fa fa-folder-close"></i> Server</label>
+    <select id="node-input-server" style="width:68%">
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-accept"><i class="fa fa-folder-close"></i>Response Content Type</label>
+    <input type="text" id="node-input-accept">
+  </div>
+
+  <div class="form-tips">
+    <span><b>Note: </b>This is an admin node, so please ensure the user selected has admin authorisation</span>
+    <br>
+    <span>This node supports the following parameters via an inject node:</span>
+    <br>
+    <b>Required:</b>
+    <ul>
+      <li><b>msg.qmgr</b> : The name of the MQ Queue Manager</li>
+    </ul>
+    Optional:
+    <ul>
+      <li><b>msg.chnlName</b> : The name of a channel.</li>
+      <li><b>msg.mqparams.attributes</b> : </li>
+      <li><b>msg.mqparams.status</b> : </li>
+      <li><b>msg.mqparams.filter</b> : </li>
+      <li><b>msg.mqparams.queueSharingGroupDisposition</b> : </li>
+      <li><b>msg.gatewayQMGR.</b> : </li>
+    </ul>
+  </div>
+  
+</script>
+
+<script type="text/html" data-help-name="mqrest-channel">
+  <p>This node makes use of the MQ REST API to retrieve details of MQ Queue Manager channels. Use the
+  configuration pannel to specify parameters.</p>
+  
+  </script>
+
+<style type="text/css">
+  .node_label_white {
+    fill: white;
+  }
+
+  #palette_node_mqrest>div.palette_label {
+    color: white;
+  }
+</style>
+
+<script type="text/javascript">
+  (function () {
+    RED.nodes.registerType('mqrest-channel', {
+      category: 'IBM MQ REST',
+      defaults: {
+        name: { value: '' },
+        user: { value: "", type: "user-config", required:true },
+        server: { value: "", type: "server-config", required:true },
+        accept: { value: "application/json; charset=utf-8"}, 
+      },
+      credentials: {
+      },
+      color: '#C7E9C0' , // rgb(50,75,75)
+      inputs: 1,
+      outputs: 1,
+      paletteLabel: 'MQ Channel',
+      icon: 'feed.png',
+      label: function () {
+        return this.name || 'MQ Channel';
+      },
+      labelStyle: function () {
+        return this.name ? 'node_label_italic node_label_black' : 'node_label_black';
+      },
+      oneditprepare: function () {
+        $("#node-input-accept").typedInput({
+          types: [
+            {
+              value: "Content type",
+              options: [
+                { value: "application/json; charset=utf-8", label: "application/json; charset=utf-8"}
+              ]
+            }
+          ]
+        });
+      }
+    });
+  })();
+</script>
