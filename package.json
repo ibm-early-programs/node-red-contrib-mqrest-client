@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-mqrest-client",
-  "version": "0.0.2",
+  "version": "0.2.0",
   "description": "MQ REST Clients",
   "dependencies": {
     "axios": "^0.26.1"
@@ -40,7 +40,6 @@
       "mqi-mqsc": "nodes/qmgr-mqsc.js",
       "mqi-queue": "nodes/mqrest-queue.js",
       "mqi-sub": "nodes/mqrest-sub.js"
-
     }
   },
   "engines": {
