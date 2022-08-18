@@ -20,7 +20,7 @@
       this.host = config.host;
       this.port = config.port;
       this.allowSelfSigned = config.allowSelfSigned;
-      this.prefix = `https://${config.host}:${config.port}/ibmmq/rest/`;
+      this.prefix = `https://${config.host}:${config.port}/ibmmq/rest`;
     }
  
     RED.nodes.registerType('server-config', ServerConfigNode,{
